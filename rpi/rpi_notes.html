@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="author" content="devpogi" />
+<link rel="stylesheet" href="../style.css" />
+<title>devpogi notes</title>
+</head>
+<body>
+
+<h1 id="playing-with-raspberry">Playing with Raspberry</h1>
+
+<h2 id="first-boot">First Boot</h2>
+
+<ul>
+<li>I bought a RPI Model 4B 4GB</li>
+<li>I installed <a href="https://www.raspberrypi.com/software/operating-systems/#raspberry-pi-os-64-bit">Raspberry Pi OS Lite 64 bit</a> using <code>rpi-imager</code> tool on USB drive.</li>
+</ul>
+
+<pre><code class="language-bash">sudo pacman -Syu rpi-imager
+</code></pre>
+
+<ul>
+<li>Bootable USB drive has two partitions - <code>&#47;boot</code> and <code>&#47;rootfs</code></li>
+<li>Edit <code>&#47;etc&#47;dhcpcd.conf</code> -</li>
+</ul>
+
+<pre><code class="language-plaintext"># Example static IP configuration:
+interface eth0
+static ip_address=192.168.1.120&#47;24
+static routers=192.168.1.1
+static domain_name_servers=192.168.1.1 8.8.8.8
+</code></pre>
+
+<ul>
+<li><p>I tried to connect rpi with ethernet to laptop directly to access it in headless mode but I failed to do so.</p></li>
+<li><p>Then I connected rpi to my <a href="https://www.tp-link.com/in/home-networking/range-extender/re200/v5/">TP-Link WiFi extender</a> with ethernet directly.</p></li>
+<li><p>Use <code>nmap -sn 192.168.1.0&#47;24</code> to find the list of all connected clients from laptop.</p></li>
+<li><p>From terminal on laptop, I can login now - 
+(default username: pi, default password: raspberry)</p></li>
+</ul>
+
+<pre><code class="language-bash">ssh pi@192.168.1.120
+</code></pre>
+
+<ul>
+<li><p>On first ssh into rpi, I did - <code>passwd</code> and changed the password for <code>pi</code> user.</p></li>
+<li><p>Then I did <code>sudo raspi-config</code> and changed Locale (country, time, language), enabled SSH (from <em>Interfacing Options</em>), <code>sudo apt update</code> and <code>sudo apt upgrade</code>. Then enable VNC (<em>raspi-config -&#62; Interfacing Options</em>). </p></li>
+<li><p>Since I downloaded a Lite version of RPI OS, so enabling VNC (<em>raspi-config -&#62; Interfacing Options</em>) will first download and install VNC (server) related packages.
+On manjaro laptop, I installed <a href="https://www.realvnc.com/en/connect/download/viewer/">generic script x86_64 vncviewer</a> and <a href="https://stackoverflow.com/questions/71165097/missing-dependencie-for-realvnc-vnc-viewer-in-arch-linux-libcrypt-so-1">libxcrypt-compact</a>. Although I have enabled VNC on rpi, when I connect it from laptop (using vncviewer), it says <strong>&#8220;Cannot currently show the desktop&#8221;</strong> because the OS is Lite (would not have graphical environment). </p></li>
+<li><p><code>neofetch</code> is available from the raspberry pi os repos, but it takes about 22 MB install size because it downloads additional dependencies. However, neofetch mentions that it requires only bash as a mandatory dependency, therefore instead of installing neofetch from the repos, I just downloaded the shell file on rpi - </p></li>
+</ul>
+
+<pre><code class="language-bash">wget https:&#47;&#47;raw.githubusercontent.com&#47;dylanaraps&#47;neofetch&#47;master&#47;neofetch
+</code></pre>
+
+<p>Then make this file executable and run.</p>
+
+<p><img src="rpi_neofetch.png" alt="neofetch on my rpi" /></p>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="author" content="devpogi" />
+<link rel="stylesheet" href="../style.css" />
+<title>devpogi notes</title>
+</head>
+<body>
+
+<h1 id="linux-notes">Linux Notes</h1>
+
+<h2 id="manjaro-specific-notes">Manjaro Specific Notes</h2>
+
+<h3 id="pacman">pacman</h3>
+
+<ul>
+<li><a href="https://www.youtube.com/watch?v=-dEuXTMzRKs">luke smith&#8217;s video</a></li>
+</ul>
+
+<pre><code>pacman -S -&#62; for install related things, search in repos, etc.
+pacman -R -&#62; to remove
+pacman -Q -&#62; to query installed ones
+</code></pre>
+
+<p>To query which package (from the repos, provides a file)
+<code>
+pacman -Fy filename
+pacman -Fy libsane.so
+pacman -F dig
+</code></p>
+
+<p>(<code>y</code> is for syncing, so once you have done that, you may skip that if you are running the command instantly later).</p>
+
+<pre><code>pacman -Syu -&#62; sync and update the system
+pacman -S bind -&#62; install package `bind` but do this only after once you have synced and updated recently
+pacman -Ss zathura -&#62; search for `zathura` package, this will show all the packages having zathura in their name or description
+pacman -Rs telegram-desktop -&#62; remove `telegram-desktop` package along with its dependencies.
+pacman -R zathura-pdf-poppler -&#62; remove this package, leaving behind any dependencies that it might have.
+pacman -Rns telegram-desktop -&#62; remove this package, along with the conf files and dependencies.
+pacman -Q -&#62; lists all the packages installed on the system
+pacman -Qe -&#62; lists all the packages installed by you (or installed as a dep of a program that you installed)
+pacman -Qdt -&#62; lists the packages that are kinda orphaned, they were installed as a dep by another program but the another program no longer exists and so they are not needed by any other program and so they can be removed.
+pacman -Q | wc -l -&#62; wew, counts the number of packages, lol
+</code></pre>
+
+<p>Configure the following options in <code>&#47;etc&#47;pacman.conf</code> -</p>
+
+<p><code>Color</code> -&#62; for having colored output in pacman results
+<code>ILoveCandy</code> -&#62; for having pacman icon instead of hash-sign on progress-bar in pacman results.</p>
+
+<h3 id="which-package-provides-a-missing-file">which package provides a missing file?</h3>
+
+<pre><code>vncviewer: error while loading shared libraries: libcrypt.so.1: cannot open shared object file: No such file or directory
+</code></pre>
+
+<p>This most probably means that some package which provides this missing lib file is currently not installed.</p>
+
+<pre><code>$ pkgfile -s libcrypt.so                                                 
+core&#47;libxcrypt
+community&#47;aarch64-linux-gnu-glibc
+community&#47;riscv64-linux-gnu-glibc
+multilib&#47;lib32-libxcrypt
+</code></pre>
+
+<p>Now, we can install any of these packages (example: <code>sudo pacman -S libxcrypt</code>)</p>
+
+<hr/>
+
+<h2 id="general">General</h2>
+
+<h3 id="tweaks-and-utilities">tweaks and utilities</h3>
+
+<ul>
+<li><code>pandoc</code> for converting <code>.md</code> to <code>.pdf</code>, etc.</li>
+</ul>
+
+<pre><code>sudo pacman -Syu pandoc texlive-core texlive-fontsextra texlive-latexextra
+
+pandoc file.md -o file.pdf
+</code></pre>
+
+<h2 id="networks">networks</h2>
+
+<ul>
+<li><a href="https://www.youtube.com/watch?v=-wMU8vmfaYo">Ben Eater&#8217;s video explaining BGP and DNS</a></li>
+</ul>
+
+<pre><code>dig @root-server-ip www.facebook.com
+</code></pre>
+
+<p><a href="https://www.iana.org/domains/root/servers">root servers ip</a></p>
+</body>
+</html>

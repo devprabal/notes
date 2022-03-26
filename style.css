@@ -1,0 +1,140 @@
+/*
+  Inspirations: 
+  colors: [Material design 2014 gray color pallete](https://material.io/design/color/the-color-system.html)
+  css : [Jan-Lukas Else's website](https://jlelse.blog/)
+*/
+body {
+  background-color: #fafafa;
+  color: #212121;
+  font-family: system-ui, sans-serif;
+  line-height: 1.7;
+  margin: 0 auto;
+  max-width: 720px;
+  padding: 10px;
+  text-align: left;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  transition: background-color 300ms ease-in-out 0s;
+}
+body * {
+  max-width: 100%;
+}
+body ::selection {
+  background-color: #212121;
+  color: #fafafa;
+}
+
+nav {
+  background-color: #fafafa;
+  color: #212121;
+  text-align: right;
+  font-family: system-ui, sans-serif;
+  font-size: 1.1em;
+}
+
+button {
+  background-color: #fafafa;
+  color: #212121;
+  border: 1px solid #212121;
+}
+
+img {
+  max-width: 80%;
+}
+
+:not(pre) > code {
+  font-family: monospace;
+  background-color: #fafafa;
+  color: #212121;
+  border: 1px solid #212121;
+  font-size: 1.1em;
+  padding: 1px;
+  margin-left: 1px;
+  margin-right: 1px;
+}
+
+pre {
+  font-family: monospace;
+  background-color: #fafafa;
+  color: #212121;
+  font-size: 1.1em;
+  border: 2px solid #212121;
+  padding: 10px;
+  white-space: pre-wrap;
+}
+
+a {
+  background-color: #fafafa;
+  color: #212121;
+  text-decoration: underline;
+  padding: 0 1px;
+}
+
+a:hover {
+  background-color: #212121;
+  color: #fafafa;
+  text-decoration: none;
+}
+
+blockquote {
+  background-color: #fafafa;
+  color: #212121;
+  font-style: italic;
+  font-size: 90%;
+  padding-left: 20px;
+  border-left: 1px solid #212121;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #212121;
+    color: #fafafa;
+  }
+  body ::selection {
+    background-color: #fafafa;
+    color: #212121;
+  }
+
+  nav {
+    background-color: #212121;
+    color: #fafafa;
+  }
+
+  button {
+    background-color: #212121;
+    color: #fafafa;
+    border: 1px solid #fafafa;
+  }
+
+  :not(pre) > code {
+    background-color: #212121;
+    color: #fafafa;
+    border: 1px solid #fafafa;
+  }
+
+  pre {
+    background-color: #212121;
+    color: #fafafa;
+    border: 2px solid #fafafa;
+  }
+
+  a {
+    background-color: #212121;
+    color: #fafafa;
+    text-decoration: underline;
+  }
+
+  a:hover {
+    background-color: #fafafa;
+    color: #212121;
+    text-decoration: none;
+  }
+
+  blockquote {
+    background-color: #212121;
+    color: #fafafa;
+    border-left: 1px solid #fafafa;
+  }
+}
+
+/*# sourceMappingURL=style.css.map */

@@ -1,0 +1,156 @@
+/*
+  Inspirations: 
+  colors: [Material design 2014 gray color pallete](https://material.io/design/color/the-color-system.html)
+  css : [Jan-Lukas Else's website](https://jlelse.blog/)
+*/
+
+$Black: #212121;
+$White: #fafafa;
+
+$Black300: #E0E0E0;
+$Black800: #424242;
+
+@mixin BgAndTextColorChanger($BgColor: "White") {
+  @if $BgColor == "White" {
+    background-color: $White;
+    color: $Black;
+  } @else if $BgColor == "Black" {
+    background-color: $Black;
+    color: $White;
+  } @else if $BgColor == "InlineCode-Light" {
+    // background-color: $Black300;
+    background-color: $White;
+    color: $Black;
+    border: 1px solid $Black;
+  } @else if $BgColor == "InlineCode-Dark" {
+    // background-color: $Black800;
+    background-color: $Black;
+    color: $White;
+    border: 1px solid $White;
+  }
+}
+
+body {
+  @include BgAndTextColorChanger($BgColor: "White");
+  font-family: system-ui, sans-serif;
+  line-height: 1.7;
+  margin: 0 auto;
+  max-width: 720px;
+  padding: 10px;
+  text-align: left;
+  word-break: break-word;
+  overflow-wrap: break-word;
+
+  * {
+    max-width: 100%;
+  }
+
+  ::selection {
+    @include BgAndTextColorChanger($BgColor: "Black");
+  }
+
+  transition: background-color 300ms ease-in-out 0s;
+}
+
+nav {
+  @include BgAndTextColorChanger($BgColor: "White");
+  text-align: right;
+  font-family: system-ui, sans-serif;
+  font-size: 1.1em;
+}
+
+button {
+  @include BgAndTextColorChanger($BgColor: "White");
+  border: 1px solid $Black;
+}
+
+img {
+  max-width: 80%;
+}
+
+:not(pre) > code {
+  font-family: monospace;
+  @include BgAndTextColorChanger($BgColor: "InlineCode-Light");
+  font-size: 1.1em;
+  padding: 1px;
+  margin-left: 1px;
+  margin-right: 1px;
+}
+
+pre {
+  font-family: monospace;
+  @include BgAndTextColorChanger($BgColor: "White");
+  font-size: 1.1em;
+  border: 2px solid $Black;
+  padding: 10px;
+  white-space: pre-wrap;
+}
+
+a {
+  @include BgAndTextColorChanger($BgColor: "White");
+  text-decoration: underline;
+  padding: 0 1px;
+}
+
+a:hover {
+  @include BgAndTextColorChanger($BgColor: "Black");
+  text-decoration: none;
+}
+
+blockquote {
+  @include BgAndTextColorChanger($BgColor: "White");
+  font-style: italic;
+  font-size: 90%;
+  padding-left: 20px;
+  border-left: 1px solid $Black;
+}
+
+@mixin ThemeChanger($ThemeMode: "Light") {
+  @if $ThemeMode == "Dark" {
+    body {
+      @include BgAndTextColorChanger($BgColor: "Black");
+
+      ::selection {
+        @include BgAndTextColorChanger($BgColor: "White");
+      }
+    }
+    nav {
+      @include BgAndTextColorChanger($BgColor: "Black");
+    }
+
+    button {
+      @include BgAndTextColorChanger($BgColor: "Black");
+      border: 1px solid $White;
+    }
+
+    :not(pre) > code {
+      @include BgAndTextColorChanger($BgColor: "InlineCode-Dark");
+    }
+
+    pre {
+      @include BgAndTextColorChanger($BgColor: "Black");
+      border: 2px solid $White;
+    }
+
+    a {
+      @include BgAndTextColorChanger($BgColor: "Black");
+      text-decoration: underline;
+    }
+
+    a:hover {
+      @include BgAndTextColorChanger($BgColor: "White");
+      text-decoration: none;
+    }
+
+    blockquote {
+      @include BgAndTextColorChanger($BgColor: "Black");
+      border-left: 1px solid $White;
+    }
+
+  }
+}
+
+
+@media (prefers-color-scheme: dark) {
+  @include ThemeChanger($ThemeMode: "Dark");
+}
