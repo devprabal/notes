@@ -3,7 +3,7 @@ DIRS=	rpi \
 
 include vars.mk
 
-LOWDOWN_PATH=lowdown
+LOWDOWN_PATH=./lowdown
 CSS_PATH=style.css
 OBJS= build.sh style.css style.css.map index.html
 
@@ -24,10 +24,10 @@ script:
 	@./build.sh
 
 index.html: README.md style.css
-	@./lowdown -s $< -o $@ -thtml \
-	-M author='devpogi' \
-	-M css='style.css' \
-	-M title='devpogi notes'
+	@$(LOWDOWN_PATH) -s $< -o $@ -thtml \
+	-M author="$(AUTHOR)" \
+	-M title="$(TITLE)" \
+	-M css="$(CSS_PATH)"
 	@echo -e "generated $(COLOR_BLUE)index.html$(COLOR_NONE)"
 
 fix_index.html:
