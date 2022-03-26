@@ -20,15 +20,3 @@
 <title>devpogi notes</title>
 </head>
 <body>
-<h1 id="devpogi-notes">devpogi notes</h1>
-
-<p><em>My learnings on various subjects.</em></p>
-
-<h2 id="list">List</h2>
-
-<ul>
-<li><a href="rpi/rpi_notes.html">Raspberry Pi</a></li>
-<li><a href="linux/linux_notes.html">Linux</a></li>
-</ul>
-</body>
-</html>

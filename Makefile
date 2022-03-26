@@ -24,10 +24,12 @@ script:
 	@./build.sh
 
 index.html: README.md style.css
-	@$(LOWDOWN_PATH) -s $< -o $@ -thtml \
-	-M author="$(AUTHOR)" \
-	-M title="$(TITLE)" \
-	-M css="$(CSS_PATH)"
+	@$(LOWDOWN_PATH) $< -o $@.temp -thtml
+	@cat html_envelope > index.html
+	@cat $@.temp >> index.html
+	@echo '</body>' >> index.html
+	@echo '</html>' >> index.html
+	@rm -f $@.temp
 	@echo -e "generated $(COLOR_BLUE)index.html$(COLOR_NONE)"
 
 fix_index.html:
