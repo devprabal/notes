@@ -1,13 +1,19 @@
-DIRS=	rpi \
-		linux
+DIRS_UNSORTED=	rpi \
+		linux \
+		brave_browser
+
+DIRS=$(sort $(DIRS_UNSORTED))
+
+## print sorted DIRS
+#$(info $$(DIRS) is [${DIRS}])
 
 include vars.mk
 
 LOWDOWN_PATH=./lowdown
 CSS_PATH=style.css
-OBJS= build.sh style.css style.css.map index.html
+OBJS= build.sh README.md style.css style.css.map index.html
 
-build: clean script index.html fix_index.html
+build: clean script README index.html fix_index.html
 	@echo -e "$(COLOR_GREEN)DONE$(COLOR_NONE)"
 
 clean:
@@ -22,6 +28,19 @@ script:
 	done
 	@chmod +x build.sh
 	@./build.sh
+
+README:
+	@echo -e "$(COLOR_YELLOW)Generating$(COLOR_NONE) README file $(COLOR_BLUE)README.md$(COLOR_NONE)"
+	@echo '# devpogi notes' > README.md
+	@echo >> README.md
+	@echo '*My learnings on various subjects.*' >> README.md
+	@echo >> README.md
+	@echo 'List' >> README.md
+	@echo >> README.md
+	@for dirname in $(DIRS); do \
+		echo "- [$${dirname}]($${dirname}/$${dirname}_notes.md)" >> README.md ; \
+	done
+	@echo >> README.md
 
 index.html: README.md style.css
 	@$(LOWDOWN_PATH) $< -o $@.temp -thtml

@@ -2,8 +2,9 @@
 
 *My learnings on various subjects.*
 
-## List
+List
 
-- [Raspberry Pi](rpi/rpi_notes.md)
-- [Linux](linux/linux_notes.md)
+- [brave_browser](brave_browser/brave_browser_notes.md)
+- [linux](linux/linux_notes.md)
+- [rpi](rpi/rpi_notes.md)
 
