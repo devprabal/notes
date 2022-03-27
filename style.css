@@ -39,7 +39,7 @@ button {
 }
 
 img {
-  max-width: 80%;
+  max-width: 100%;
 }
 
 :not(pre) > code {
