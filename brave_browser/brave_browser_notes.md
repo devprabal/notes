@@ -42,10 +42,11 @@ Install this extension
 
 ## Extras - 
 
-Install these extensions - 
-- [fastforward](https://fastforward.team/)
-- [SponsorBlock](https://sponsor.ajay.app/)
-- [uBlock](https://github.com/gorhill/uBlock)
+Install these extensions -
+
+- [fastforward](https://fastforward.team/)  
+- [SponsorBlock](https://sponsor.ajay.app/)  
+- [uBlock](https://github.com/gorhill/uBlock)  
 
 ---
 
