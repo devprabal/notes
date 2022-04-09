@@ -10,13 +10,16 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="devpogi notes">
 <meta property="og:description" content="devprabal's personal note-taking website">
-<meta property="og:image" content="/notes/notes_github_cover.png">
+<meta property="og:image" content="https://devprabal.github.io/notes/notes_github_cover.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta property="twitter:domain" content="devprabal.github.io">
 <meta property="twitter:url" content="https://devprabal.github.io/notes/">
 <meta name="twitter:title" content="devpogi notes">
 <meta name="twitter:description" content="devprabal's personal note-taking website">
-<meta name="twitter:image" content="/notes/notes_github_cover.png">
+<meta name="twitter:image" content="https://devprabal.github.io/notes/notes_github_cover.png">
 <title>devpogi notes</title>
 </head>
 <body>
+<header>
+    <a href="./index.html">Home</a>
+</header>
