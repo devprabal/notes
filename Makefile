@@ -1,7 +1,8 @@
 DIRS_UNSORTED=	rpi \
 		linux \
 		brave_browser \
-		c
+		c \
+		cpp
 
 DIRS=$(sort $(DIRS_UNSORTED))
 

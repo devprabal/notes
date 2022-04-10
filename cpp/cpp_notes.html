@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="author" content="devpogi" />
+<link rel="stylesheet" href="../style.css" />
+<title>devpogi notes</title>
+</head>
+<body>
+<header>
+	<a href="../index.html">Home</a>
+</header>
+
+<h1 id="c-notes">C++ notes</h1>
+
+<h2 id="custom-compare-function-for-custom-objects">Custom compare function for custom objects</h2>
+
+<pre><code class="language-cpp">&#47;&#47; using custom compare function for custom objects in priority_queue
+
+#include &#60;iostream&#62;
+#include &#60;queue&#62;
+using namespace std;
+
+struct Node
+{
+    int a;
+    int b;
+};
+
+bool compare(const Node &#38;n, const Node &#38;m)
+{
+    if (n.a &#60; m.a)
+        return true;
+    else if (n.a == m.a)
+    {
+        if (n.b &#60; m.b)
+            return true;
+    }
+    return false;
+}
+
+priority_queue&#60;Node, vector&#60;Node&#62;, decltype(&#38;compare)&#62; buff(compare);
+
+int main()
+{
+    Node arr[] = {{2, 3}, {2, 4}, {2, 1}, {3, 1}, {3, 5}, {1, 3}, {1, 4}, {1, 0}};
+    for (int i = 0; i &#60; sizeof(arr) &#47; sizeof(arr[0]); i++)
+    {
+        buff.push(arr[i]);
+    }
+    while (!buff.empty())
+    {
+        cout &#60;&#60; "{" &#60;&#60; buff.top().a &#60;&#60; "," &#60;&#60; buff.top().b &#60;&#60; "}\n";
+        buff.pop();
+    }
+    return 0;
+}
+
+&#47;*
+OUTPUT -
+
+{3,5}
+{3,1}
+{2,4}
+{2,3}
+{2,1}
+{1,4}
+{1,3}
+{1,0}
+
+*&#47;
+</code></pre>
+
+<h2 id="optimization-reserve-the-size-of-hash-table">Optimization: reserve the size of hash table</h2>
+
+<pre><code class="language-cpp">#define SIZE_OF_HASH_TABLE 20000
+unordered_map&#60;string, int&#62; mymap;
+mymap.reserve(SIZE_OF_HASH_TABLE);
+</code></pre>
+
+<p>This reserves the size of the hash table so that re-hashing doesn&#8217;t occur for at least till <code>SIZE_OF_HASH_TABLE</code> number of elememts. </p>
+</body>
+</html>
