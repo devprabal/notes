@@ -4,3 +4,4 @@ make NOTE_NAME=c_notes -C c -f c.mk --no-print-directory
 make NOTE_NAME=cpp_notes -C cpp -f cpp.mk --no-print-directory
 make NOTE_NAME=linux_notes -C linux -f linux.mk --no-print-directory
 make NOTE_NAME=rpi_notes -C rpi -f rpi.mk --no-print-directory
+make NOTE_NAME=vim_notes -C vim -f vim.mk --no-print-directory
