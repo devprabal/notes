@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="author" content="devpogi" />
+<link rel="stylesheet" href="../style.css" />
+<title>devpogi notes</title>
+</head>
+<body>
+<header>
+	<a href="../index.html">Home</a>
+</header>
+
+<h1 id="c-notes">C notes</h1>
+
+<h2 id="what-happens-when-you-have-the-same-function-name-in-two-different-files-and-one-of-them-in-not-">What happens when you have the same function name in two different files and one of them in not <code>static</code> ?</h2>
+
+<p>You might get a linking error saying that there are multiple definitions for that function. You can also see where the function was first defined in the compiler logs.</p>
+
+<h2 id="compile-c-using-visual-studio-compiler-on-windows">Compile C using visual studio compiler on windows</h2>
+
+<p>Open developer command prompt (which gets installed as a part of Visual Studio).</p>
+
+<pre><code class="language-powershell">type&#62; cl
+type&#62; cl main.c
+type&#62; main
+</code></pre>
+
+<p><a href="https://docs.microsoft.com/en-us/cpp/build/walkthrough-compile-a-c-program-on-the-command-line?view=msvc-170">MSVC: walkthrough-compile-a-c-program-on-the-command-line</a></p>
+
+<h2 id="a-better-way-to-write-comparison-statements">A better way to write comparison statements</h2>
+
+<p><code>(NULL == ptr)</code> instead of <code>(ptr == NULL)</code></p>
+
+<p>I remember one exam in which I had spent half an hour to spot this assignment instead of comparison error.  </p>
+
+<p>People might forget to put <code>!</code> (or the extra <code>=</code> for equality, which is more difficult to spot) and do an assignment instead of a comparison.  </p>
+
+<p>Putting the <code>NULL</code> in front eliminates the possiblity for the bug, since <code>NULL</code> is not a l-value (i.e. it can&#8217;t be assigned to).</p>
+
+<h2 id="few-ways-to-implement-a-function-like-">Few ways to implement a function like <code>insertAtBeginningOfLinkedList()</code></h2>
+
+<ul>
+<li>If the head pointer is a global variable (i.e. accessible to all functions), we can just update that global variable and we don&#8217;t need to either pass or return from the function.</li>
+<li>If the head pointer is not a global variable, then we should pass the head pointer in the function and also return the updated head pointer, as -
+
+<ul>
+<li><code>head = insertAtBeginningOfLinkedList(head, data)</code></li>
+</ul></li>
+<li>We can also pass the head pointer by reference and then we don&#8217;t have to return the updated head, as - 
+
+<ul>
+<li> <code>insertAtBeginningOfLinkedList(Node **head, int data)</code></li>
+<li> since head (in <code>main()</code>) is already a pointer to <code>Node</code>, passing by reference can also be like <code>insertAtBeginningOfLinkedList(&#38;head, data)</code></li>
+<li> In order to get the head, we have to dereference it as <code>*head</code>, example, <code>if (*head != NULL) temp-&#62;next = *head;</code></li>
+</ul></li>
+</ul>
+
+<h2 id="initialization-of-">Initialization of <code>struct</code></h2>
+
+<p>If the data is a static or global variable, it is zero-filled by default, so just declare it <code>myStruct _m;</code>.  </p>
+
+<p>If the data is a local variable or a heap-allocated zone, clear it with memset as:  </p>
+
+<p><code>memset(&#38;_m, 0, sizeof(myStruct));</code></p>
+
+<p>Using <code>memset</code> for local structures is better, and it conveys better the fact that at runtime, something has to be done (while usually, global and static data can be understood as initialized at compile time, without any cost at runtime).  </p>
+
+<p><code>= {} ;</code> empty braces for initialization is a GNU extension.  </p>
+
+<p>Note that in C99, a new way of initialization, called designated initialization can be used too:  </p>
+
+<p><code>myStruct _m1 = {.c2 = 0, .c1 = 1};</code>  </p>
+
+<p><a href="https://stackoverflow.com/questions/11152160/initializing-a-struct-to-0">stackoverflow: initializing-a-struct-to-0</a>  </p>
+
+<h2 id="caution-using-to-initialize-you-cant-an-array-correctly-which-is-of-the-type-other-than-1-byte">Caution using <code>memset</code> to initialize: You can&#8217;t <code>memset</code> an array correctly which is of the type other than 1 byte</h2>
+
+<pre><code class="language-c">#include &#60;stdio.h&#62;
+#include &#60;string.h&#62;
+
+typedef enum
+{
+    ON,
+    OFF,
+    NONE,
+    _AAA,
+    _AAB,
+    _AAC,
+} MYENUM;
+
+static MYENUM MyList[2][4];
+
+int main(void)
+{
+    for (int i = 0; i &#60; 4; i++)
+    {
+        printf("\n%d\n", MyList[0][i]);
+    }
+    memset(MyList[0], NONE, sizeof(MyList[0][0]) * 4);
+    for (int i = 0; i &#60; 4; i++)
+    {
+        printf("\n%d\n", MyList[0][i]);
+    }
+    printf("\n%d\n", sizeof(MYENUM));
+    printf("\n%d\n", NONE);
+    return 0;
+}
+
+&#47;*
+OUTPUT -
+
+
+0
+
+0
+
+0
+
+0
+
+33686018
+
+33686018
+
+33686018
+
+33686018
+
+4
+
+2
+
+*&#47;
+</code></pre>
+
+<p><code>memset()</code> will set <strong>each byte</strong> to <code>NONE</code> (2) instead of <strong>every 4 bytes</strong>.  </p>
+
+<p><code>MYENUM</code> will be 4 bytes. So <code>MyList[0][0]</code> will be <code>0x02020202</code> instead of <code>0x00000002</code>.  </p>
+
+<p>We should therefore, use a <code>for</code> loop if we want to set a non-zero value.  </p>
+
+<p><a href="https://stackoverflow.com/questions/21357038/memset-enum-array-values-not-setting-correctly-c-c/21357071#21357071">stackoverflow: memset-enum-array-values-not-setting-correctly-c</a>  </p>
+
+<p>Usually, it gives correct result if setting zero value.  </p>
+
+<pre><code class="language-c">
+#include &#60;stdio.h&#62;
+#include &#60;string.h&#62;
+
+int main(void)
+{
+    size_t bbb[3] = {2, 4, 5};
+    memset(bbb, 0, sizeof(size_t));
+
+    printf("sizeof size_t %d\n", sizeof(size_t));
+    printf("sizeof bbb %d\n", sizeof(bbb));
+    printf("%d\n", bbb[0]);
+    printf("%d\n", bbb[1]);
+    printf("%d\n", bbb[2]);
+    printf("\n**************\n");
+
+    memset(bbb, 0, sizeof(bbb));
+    printf("%d\n", bbb[0]);
+    printf("%d\n", bbb[1]);
+    printf("%d\n", bbb[2]);
+
+    return 0;
+}
+
+&#47;*
+OUTPUT -
+
+sizeof size_t 8
+sizeof bbb 24
+0
+4
+5
+
+**************
+0
+0
+0
+
+*&#47;
+</code></pre>
+
+<h2 id="and-"><code>memset</code>, <code>memcpy</code> and <code>memcmp</code></h2>
+
+<p><code>memcpy()</code> copies from one place to another. <code>memset()</code> just sets all pieces of memory to the same value.  </p>
+
+<p>Example:  </p>
+
+<p><code>memset(str, &#39;*&#39;, 50);</code>  </p>
+
+<p>The above line sets the first 50 characters of the string str to <code>*</code> (or whatever the second argument of the <code>memset</code>).  </p>
+
+<p><code>memcpy(str2, str1, 50);</code>  </p>
+
+<p>The above line copies the first 50 characters of <code>str1</code> to <code>str2</code>.  </p>
+
+<p>It&#8217;s worth pointing out that the <code>mem*()</code> functions do not know about string terminators. The second example above will do bad things if <code>str1</code> is shorter than 50 characters. It&#8217;s only safe to use <code>mem*()</code> functions on string data when you have already validated the lengths involved.  </p>
+
+<p><code>memcmp()</code> (compares two blocks of memory) is in <code>&#60;string.h&#62;</code> in C. Use <code>man memcmp</code> (on terminal) to read description and to find in which header file it is declared.  </p>
+
+<p><a href="https://stackoverflow.com/questions/1536006/what-is-the-difference-between-memset-and-memcpy-in-c">stackoverflow: what-is-the-difference-between-memset-and-memcpy-in-c</a> </p>
+
+<h2 id="freeing-a-pointer">Freeing a <code>NULL</code> pointer</h2>
+
+<p>The <code>free()</code> function cause the space pointed to by pointer <code>ptr</code> to be deallocated, that is, made available for further allocations. If the <code>ptr</code> is a <code>NULL</code> pointer, no action occurs.  </p>
+
+<p><code>ptr = NULL</code> ensures that even if you accidently call <code>free(ptr)</code>, your program won&#8217;t segfault.  </p>
+
+<p>This also means that there is no need to put <code>NULL</code> check before <code>free</code>ing, something like -</p>
+
+<p><code>if (ptr != NULL) free(ptr);</code> </p>
+
+<p>But once the <code>ptr</code> has been freed, it is a good practice to set <code>ptr = NULL</code>. So that you don&#8217;t fall in the risk of double-freeing or dangling pointer access.  </p>
+
+<p>Please note that although the C standard says it is a no-op, that doesn&#8217;t mean that every C library handles it like that. There could be crashes for <code>free(NULL)</code>, so it&#8217;s best to avoid calling the <code>free()</code> on a pointer which has been set to <code>NULL</code>.  </p>
+
+<p><a href="https://stackoverflow.com/questions/1938735/does-freeptr-where-ptr-is-null-corrupt-memory">stackoverflow: does-freeptr-where-ptr-is-null-corrupt-memory</a>  </p>
+
+<h2 id="type-casting-for-freeing">Type casting for freeing</h2>
+
+<pre><code class="language-c">const char *a = (const char *)malloc(3);
+free(a); &#47;&#47; this will be a warning
+</code></pre>
+
+<pre><code class="language-plaintext">warning: passing argument 1 of &#39;free&#39; discards &#39;const&#39; qualifier from pointer target type [-Wdiscarded-qualifiers]
+   31 |     free(a); &#47;&#47; this will be a warning
+      |          ^
+In file included from &#60;source&#62;:3:
+&#47;usr&#47;include&#47;stdlib.h:565:25: note: expected &#39;void *&#39; but argument is of type &#39;const char *&#39;
+  565 | extern void free (void *__ptr) __THROW;
+</code></pre>
+
+<p>Basically a C language problem. The signature of <code>free()</code> should have been <code>void free(const void *);</code>. Fixed in C++ with <code>delete</code>. You need to cast it to a non-const pointer; <code>free</code> takes a <code>void *</code>, not a <code>const void *</code>.  </p>
+
+<p><code>free(char *(a));</code></p>
+
+<h2 id="hex-ascii-and-decimal">Hex, ASCII and decimal</h2>
+
+<pre><code class="language-c">#include &#60;stdio.h&#62;
+#include &#60;string.h&#62;
+
+int main(void)
+{
+    char a[] = {0x42, 0x31, 0x30, 0x32};
+    if(a[3] == &#39;2&#39;)
+    {
+        printf("hex 0x32 is ascii &#39;2&#39;, both of which are represented as the same char value\n");
+    }
+    printf("%s\n", a);
+    if(0xff == 0xFF)
+    {
+        printf("true\n");
+    }
+    return 0;
+}
+
+&#47;*
+OUTPUT -
+
+hex 0x32 is ascii &#39;2&#39;, both of which are represented as the same char value
+B102
+true
+
+*&#47;
+</code></pre>
+
+<h2 id="clockwise-spiral-rule">Clockwise spiral rule</h2>
+
+<p><code>const char *x</code>, x is a pointer to <code>const char</code>. The pointer can change but the contents of the thing (C-style string) being pointed to can not be changed.  </p>
+
+<p><code>char * const x</code>, x is a pointer to a <code>char</code>. The pointer can not be changed, the contents of the string can be changed. In other words, you can change the actual char, but not the pointer pointing to it.  </p>
+
+<p><code>const char *p</code> is a pointer to a <code>const char</code>.<br/>
+<code>char const *p</code> is a pointer to a <code>char const</code>.  </p>
+
+<p>Since <code>const char</code> and <code>char const</code> are the same, it&#8217;s the same thing.  <code>const</code> will apply to the symbol left of it, if there is none, then, to the symbol right to it.  </p>
+
+<p><a href="http://c-faq.com/decl/spiral.anderson.html">David Anderson: Clockwise&#47;Spiral Rule</a>  </p>
+
+<h2 id="free-the-variable-that-you-are-passing-to-a-function-that-internally-does-">Free the variable that you are passing to a function that internally does <code>strdup</code></h2>
+
+<p><code>strdup()</code> will <code>malloc</code> a memory and reuturn the pointer of that (where it also copies the supplied C-style string). So, it is the responsibility of the caller function to <code>free</code> this memory after use.  </p>
+
+<h2 id="measuring-c-programs-runtime-on-linux">Measuring C programs runtime on linux</h2>
+
+<pre><code class="language-bash">$ time .&#47;a.out
+real    0m0.003s
+user    0m0.000s
+sys     0m0.004s
+$
+</code></pre>
+
+<ul>
+<li>Real, User and Sys process time statistics.</li>
+<li>One of these things is not like the other. Real refers to actual elapsed time. User and Sys refer to CPU time used only by the process.</li>
+<li><strong>Real</strong> is wall clock time - time from start to finish of the call. This is all elapsed time including time slices used by other processes and time the process spends blocked (for example if it is waiting for I&#47;O to complete).</li>
+<li><strong>User</strong> is the amount of CPU time spent in user-mode code (outside the kernel) within the process. This is only actual CPU time used in executing the process. Other processes and time the process spends blocked do not count towards this figure.</li>
+<li><strong>Sys</strong> is the amount of CPU time spent in the kernel within the process. This means executing CPU time spent in system calls within the kernel, as opposed to library code, which is still running in user-space. Like &#8216;user&#8217;, this is only CPU time used by the process. </li>
+<li><strong>User+Sys</strong> will tell you how much actual CPU time your process used. Note that this is across all CPUs, so if the process has multiple threads (and this process is running on a computer with more than one processor) it could potentially exceed the wall clock time reported by Real (which usually occurs). Note that in the output these figures include the User and Sys time of all child processes (and their descendants) as well when they could have been collected, e.g., by wait(2) or waitpid(2), although the underlying system calls return the statistics for the process and its children separately.<br/></li>
+</ul>
+
+<p><a href="https://stackoverflow.com/questions/556405/what-do-real-user-and-sys-mean-in-the-output-of-time1">stackoverflow: what-do-real-user-and-sys-mean-in-the-output-of-time</a>  </p>
+
+<h2 id="variadic">Variadic</h2>
+
+<pre><code class="language-c">#include &#60;stdio.h&#62;
+#include &#60;stdarg.h&#62;
+
+int sum(int, ...);
+
+int main(void)
+{
+    printf("Sum of 10, 20 and 30 = %d\n", sum(3, 10, 20, 30));
+    printf("Sum of 4, 20, 25 and 30 = %d\n", sum(4, 4, 20, 25, 30));
+    return 0;
+}
+
+int sum(int num_args, ...)
+{
+    int val = 0;
+    va_list ap;
+    int i;
+
+    va_start(ap, num_args);
+    for (i = 0; i &#60; num_args; i++)
+    {
+        val += va_arg(ap, int);
+    }
+    va_end(ap);
+
+    return val;
+}
+
+&#47;*
+OUTPUT -
+
+Sum of 10, 20 and 30 = 60
+Sum of 4, 20, 25 and 30 = 79
+
+*&#47;
+</code></pre>
+
+<p>The C library macro <code>void va_start(va_list ap, last_arg)</code> initializes <code>ap</code> variable to be used with the <code>va_arg</code> and <code>va_end</code> macros. The <code>last_arg</code> is the last known fixed argument being passed to the function i.e. the argument before the ellipsis. This macro must be called before using <code>va_arg</code> and <code>va_end</code>.  </p>
+
+<p>Following is the declaration for <code>va_start()</code> macro.  </p>
+
+<pre><code class="language-c">void va_start(va_list ap, last_arg);
+</code></pre>
+
+<p><code>ap</code> - This is the object of <code>va_list</code> and it will hold the information needed to retrieve the additional arguments with <code>va_arg</code>.  </p>
+
+<h2 id="function-overloading-not-in-c-cannot-set-default-value-for-last-parameter-in-function-def-in-c">Function overloading not in C, cannot set default value for last parameter in function def in C</h2>
+
+<p>C does not allow default value to be set for a parameter(last parameter) in a function. However, there is a trick to achieve the same for on parameter using variadic function. Write a varargs function and manually fill in default values for arguments which the caller doesn&#8217;t pass.  </p>
+
+<p>Also, ther is no function overloading in C (but it is supported in Modern C, see C11).</p>
+
+<h2 id="printing-byte-hex-values">Printing byte (hex) values</h2>
+
+<pre><code class="language-c">#include &#60;stdio.h&#62;
+#include &#60;string.h&#62; &#47;&#47; for memcmp
+
+int main(void)
+{
+    char buff[3] = { 0, };
+    snprintf(buff, 3, "%d", 10);
+    printf("%s", buff);
+
+    unsigned char *a = "\xF0";
+    unsigned char b = 0xF0;
+
+    if (memcmp(a, (unsigned char *)"\xF0", sizeof(unsigned char)) == 0)
+    {
+        printf("\nworks");
+    }
+    printf("\n%02X", b);
+    printf("\n%02X", a);
+    printf("\n%02X", a[0]);
+    return 0;
+}
+
+&#47;*
+OUTPUT -
+
+10
+works
+F0
+40200A
+F0
+
+*&#47;
+</code></pre>
+
+<h2 id="and--1"><code>char []</code> and <code>char *</code></h2>
+
+<pre><code class="language-c">#include &#60;stdio.h&#62;
+
+int main(void)
+{
+    char a[] = "abcdefghij";
+
+    printf("\nsizeof(a) = %d", sizeof(a));
+
+    char *b = "abcdefghij";
+    printf("\nsizeof(b) = %d", sizeof(b));
+    printf("\nb[0] = &#39;%c&#39;", b[0]);
+    printf("\nsizeof(b)&#47;sizeof(b[0]) = %d", sizeof(b) &#47; sizeof(b[0]));
+
+    return 0;
+}
+
+&#47;*
+OUTPUT -
+
+sizeof(a) = 11
+sizeof(b) = 8
+b[0] = &#39;a&#39;
+sizeof(b)&#47;sizeof(b[0]) = 8
+
+*&#47;
+</code></pre>
+
+<h2 id="checking-memleak-with-">Checking memleak with <code>valgrind</code></h2>
+
+<p>The below program (filename: strdup_memleak.c) is free of mem-leak.</p>
+
+<pre><code class="language-c">#include &#60;stdio.h&#62;
+#include &#60;string.h&#62;
+#include &#60;malloc.h&#62;
+
+int main(void)
+{
+    char **arr = (char **)calloc(3, sizeof(char *));
+    printf("\n%ld sizeof char *\n", sizeof(char *));
+
+    arr[0] = strdup("apple");
+    arr[1] = strdup("bye");
+    arr[2] = "jo";
+
+    free(arr[0]);
+    free(arr[1]);
+    free(arr);
+
+    return 0;
+}
+
+&#47;*
+OUTPUT and method to run -
+
+devpogi@Pavilion Downloads]$ gcc strdup_memleak.c 
+[devpogi@Pavilion Downloads]$ .&#47;a.out 
+
+8 sizeof char *
+[devpogi@Pavilion Downloads]$ valgrind --leak-check=yes .&#47;a.out 
+==13263== Memcheck, a memory error detector
+==13263== Copyright (C) 2002-2017, and GNU GPL&#39;d, by Julian Seward et al.
+==13263== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==13263== Command: .&#47;a.out
+==13263== 
+
+8 sizeof char *
+==13263== 
+==13263== HEAP SUMMARY:
+==13263==     in use at exit: 0 bytes in 0 blocks
+==13263==   total heap usage: 4 allocs, 4 frees, 1,058 bytes allocated
+==13263== 
+==13263== All heap blocks were freed -- no leaks are possible
+==13263== 
+==13263== For lists of detected and suppressed errors, rerun with: -s
+==13263== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+[devpogi@Pavilion Downloads]$ 
+
+*&#47;
+
+</code></pre>
+
+<h2 id="libcheck-header-file-and-its-compiled-src-file-on-linux">libcheck header file and its compiled src file on linux</h2>
+
+<pre><code class="language-bash">[devpogi@Pavilion ~]$ sudo pacman -S check
+
+[devpogi@Pavilion ~]$ cd &#47;usr&#47;lib
+[devpogi@Pavilion lib]$ ls | grep check
+libcheck.so
+libcheck.so.0
+libcheck.so.0.15.2
+[devpogi@Pavilion lib]$ 
+[devpogi@Pavilion lib]$ cd ..&#47;include&#47;
+[devpogi@Pavilion include]$ pwd
+&#47;usr&#47;include
+[devpogi@Pavilion include]$ ls | grep check
+check.h
+[devpogi@Pavilion include]$ 
+
+</code></pre>
+
+<p><a href="https://stackoverflow.com/questions/45417496/how-to-determine-if-platform-library-is-static-or-dynamic-from-autotools">stackoverflow: how-to-determine-if-platform-library-is-static-or-dynamic-from-autotools</a>  </p>
+
+<h2 id="only-works-on-integral-values-not-pointers"><code>switch</code> only works on integral values, not pointers</h2>
+
+<pre><code class="language-plaintest">error: switch quantity not an integer
+error: pointers are not permitted as case values
+</code></pre>
+
+<p><code>switch</code> statements operate on integral values only. That&#8217;s why the error message is &#8220;switch quantity not an integer&#8221;. It&#8217;s not a technical limitation so much as it&#8217;s outside the language syntax.  </p>
+
+<p><code>switch</code> is a generalization of a jump table. Jump tables are indexed with integers, not pointers. If your case labels are too spread out the compiler probably converts most or all of them to if&#47;else. There&#8217;s no benefit from using switch&#47;case with non-integral labels instead of if&#47;else.  </p>
+
+<p><a href="https://stackoverflow.com/questions/2308323/why-no-switch-on-pointers">stackoverflow: why-no-switch-on-pointers</a>  </p>
+
+<h2 id="error-dereferencing-pointer-to-incomplete-type">Error: dereferencing pointer to incomplete type</h2>
+
+<pre><code class="language-c">generic_linkedlist_node *hhhead = generic_linkedlist_get_head_node(generic_linkedlist_instance_obj);
+&#47;&#47; --snip--
+if(hhhead)
+{
+    free(hhhead-&#62;data);
+    &#47;*
+     * One of my functions calloc&#39;ed it so I will have to free it.
+     * It is not the responsibility of generic_linkedlist functions to free it.
+     * The above line will show error dereferencing pointer to incomplete type 
+     * because the compiler only knows that generic_linkedlist_node is a struct 
+     * (typedef&#39;ed in one of the generic_linkedlist header files).
+     * Since the members of generic_linkedlist_node struct are "defined" 
+     * in .c file and we include only the .h fle, 
+     * so compiler won&#39;t have any account of 
+     * what data members are present in generic_linkedlist_node.
+     *&#47;
+}
+</code></pre>
+
+<p><strong>NOTE: whoever allocates a memory should free it. It is not the responsibility of some other function to free. If one of &#8220;your&#8221; functions allocated it, then same&#47;another of &#8220;your&#8221; functions should deallocate it.</strong>  </p>
+
+<p>Either define the <code>struct</code> (not just <code>typedef</code> it) in the <code>.h</code> file or have some methods in the <code>.c</code> file to return the data members.  </p>
+
+<pre><code class="language-c">static void myfunc(generic_linkedlist_node *node, void *arg)
+{
+    cstm_st_type *dddata = (cstm_st_type *)generic_linkedlist_get_data(node);
+    
+    &#47;* hhhead-&#62;data is of generic void * type when the library function returns, 
+     * but since we calloc&#39;ed it as cstm_st_type, we type cast into it.
+     *&#47;
+
+    free(dddata-&#62;info);
+    &#47;* dddata-&#62;info was also calloc&#39;ed from one of my functions.
+     *&#47;
+
+    free(dddata);
+    &#47;* dddata was also calloc&#39;ed from one of my functions.
+     *&#47;
+}
+
+generic_linkedlist_node *hhhead = generic_linkedlist_get_head_node(generic_linkedlist_instance_obj);
+if(hhhead)
+{
+    generic_linkedlist_iterate_node(generic_linkedlist_instance_obj, hhhead, myfunc, NULL); 
+    
+    &#47;&#47; second last argument is a callback function
+    &#47;&#47; last argument is the arguments passed to callback func
+}
+</code></pre>
+
+<h2 id="and--2"><code>strcmp()</code> and <code>strncmp()</code></h2>
+
+<pre><code class="language-c">#include &#60;stdio.h&#62;
+#include &#60;string.h&#62;
+
+int main(void)
+{
+    char *a = "1";
+    char *b = "150";
+    if (strncmp(a, b, strlen(a)) == 0)
+    {
+        printf("WRONG ANSWER! The strings are not equal\n");
+        printf("string a can be a substring of string b\n");
+        printf("third arg should be the greater of two str len\n");
+    }
+    if (strcmp(a, b) == 0)
+    {
+        printf("CORRECT ANSWER!\n");
+    }
+    return 0;
+}
+
+&#47;*
+OUTPUT -
+
+WRONG ANSWER! The strings are not equal
+string a can be a substring of string b
+third arg should be the greater of two str len
+
+*&#47;
+</code></pre>
+
+<p>Therefore, we should compare till <code>max(strlen(a), strlen(b))</code> .</p>
+
+<h2 id="why-can-not-be-used-with-">Why <code>typedef</code> can not be used with <code>static</code> ?</h2>
+
+<p>For example, the code below gives an error -   </p>
+
+<p><code>typedef static int INT2;</code>  </p>
+
+<p>The static <code>keyword</code> is not part of the type, depending on the context it is a storage or scope specifier and has no influence whatsoever on the type. Therefore, it cannot be used as part of the type definition, which is why it is invalid here.  </p>
+
+<p>A <code>typedef</code> is a type definition, i.e. you&#8217;re saying &#8216;this name&#8217; now refers to &#8216;this type&#8217;, the name you give must be an identifier as defined by the language standard, the type has to be a type specifier, i.e. an already named type, either base type or <code>typedef</code>&#8217;ed, a <code>struct</code>, <code>union</code>, or <code>enum</code> specifier, with possible type qualifiers, i.e. <code>const</code>, or <code>volatile</code>.  </p>
+
+<p>The <code>static</code> keyword however does not change the type, it says something about the object, (in general, not in the OOP sense), example, it is a variable that is placed in the static storage, not the type.  </p>
+
+<p><a href="https://stackoverflow.com/questions/2218435/why-typedef-can-not-be-used-with-static">stackoverflow: why-typedef-can-not-be-used-with-static</a>  </p>
+
+<h2 id="empty-string">Empty string</h2>
+
+<pre><code class="language-c">#include &#60;stdio.h&#62;
+#include &#60;string.h&#62;
+
+int main(void)
+{
+    char *a = "";
+    printf("%d\n", strlen(a));
+    printf("%s_SUFFIX\n", a);
+    return 0;
+}
+
+&#47;*
+OUTPUT -
+
+0
+_SUFFIX
+
+*&#47;
+</code></pre>
+</body>
+</html>

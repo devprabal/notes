@@ -5,6 +5,7 @@
 List
 
 - [brave_browser](brave_browser/brave_browser_notes.md)
+- [c](c/c_notes.md)
 - [linux](linux/linux_notes.md)
 - [rpi](rpi/rpi_notes.md)
 
