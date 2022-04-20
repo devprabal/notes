@@ -14,9 +14,7 @@
 
 <h1 id="linux-notes">Linux Notes</h1>
 
-<h2 id="manjaro-specific-notes">Manjaro Specific Notes</h2>
-
-<h3 id="pacman">pacman</h3>
+<h2 id="pacman">pacman</h2>
 
 <ul>
 <li><a href="https://www.youtube.com/watch?v=-dEuXTMzRKs">luke smith&#8217;s video</a></li>
@@ -54,7 +52,7 @@ pacman -Q | wc -l -&#62; wew, counts the number of packages, lol
 
 <p><code>ILoveCandy</code> -&#62; for having pacman icon instead of hash-sign on progress-bar in pacman results.</p>
 
-<h3 id="which-package-provides-a-missing-file">which package provides a missing file?</h3>
+<h2 id="which-package-provides-a-missing-file">which package provides a missing file?</h2>
 
 <pre><code class="language-plaintext">vncviewer: error while loading shared libraries: libcrypt.so.1: cannot open shared object file: No such file or directory
 </code></pre>
@@ -70,11 +68,7 @@ multilib&#47;lib32-libxcrypt
 
 <p>Now, we can install any of these packages (example: <code>sudo pacman -S libxcrypt</code>)</p>
 
-<hr/>
-
-<h2 id="general">General</h2>
-
-<h3 id="tweaks-and-utilities">tweaks and utilities</h3>
+<h2 id="tweaks-and-utilities">tweaks and utilities</h2>
 
 <ul>
 <li><code>pandoc</code> for converting <code>.md</code> to <code>.pdf</code>, etc.</li>
@@ -84,6 +78,32 @@ multilib&#47;lib32-libxcrypt
 
 pandoc file.md -o file.pdf
 </code></pre>
+
+<h2 id="change-default-shell">change default shell</h2>
+
+<p>List all the available shells -  </p>
+
+<pre><code class="language-bash">$ chsh -l
+
+&#47;bin&#47;sh
+&#47;bin&#47;bash
+&#47;bin&#47;zsh
+&#47;usr&#47;bin&#47;zsh
+&#47;usr&#47;bin&#47;git-shell
+&#47;usr&#47;bin&#47;fish
+&#47;bin&#47;fish
+</code></pre>
+
+<p>Example to change to <code>fish</code> shell -   </p>
+
+<pre><code class="language-bash">$ chsh -s &#47;bin&#47;fish
+
+changing shell for devpogi.
+Password: 
+Shell changed.
+</code></pre>
+
+<p>You might need to logout and login again for the changes to take place.</p>
 
 <h2 id="networks">networks</h2>
 

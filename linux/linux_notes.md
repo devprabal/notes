@@ -1,8 +1,7 @@
 # Linux Notes
 
-## Manjaro Specific Notes
 
-### pacman
+## pacman
 
 - [luke smith's video](https://www.youtube.com/watch?v=-dEuXTMzRKs)
 
@@ -41,7 +40,8 @@ Configure the following options in `/etc/pacman.conf` -
 
 `ILoveCandy` -> for having pacman icon instead of hash-sign on progress-bar in pacman results.
 
-### which package provides a missing file?
+
+## which package provides a missing file?
 
 ```plaintext
 vncviewer: error while loading shared libraries: libcrypt.so.1: cannot open shared object file: No such file or directory
@@ -60,12 +60,7 @@ multilib/lib32-libxcrypt
 Now, we can install any of these packages (example: `sudo pacman -S libxcrypt`)
 
 
----
-
-
-## General
-
-### tweaks and utilities
+## tweaks and utilities
 
 - `pandoc` for converting `.md` to `.pdf`, etc.
 
@@ -74,6 +69,35 @@ sudo pacman -Syu pandoc texlive-core texlive-fontsextra texlive-latexextra
 
 pandoc file.md -o file.pdf
 ```
+
+## change default shell
+
+List all the available shells -  
+
+```bash
+$ chsh -l
+
+/bin/sh
+/bin/bash
+/bin/zsh
+/usr/bin/zsh
+/usr/bin/git-shell
+/usr/bin/fish
+/bin/fish
+```
+
+Example to change to `fish` shell -   
+
+```bash
+$ chsh -s /bin/fish
+
+changing shell for devpogi.
+Password: 
+Shell changed.
+```
+
+You might need to logout and login again for the changes to take place.
+
 
 ## networks
 
