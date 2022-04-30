@@ -655,3 +655,38 @@ _SUFFIX
 */
 ```
 
+
+## Variably modified array at file scope
+
+```c
+#include <stdio.h>
+#define N_VALS sizeof(values)/sizeof(values[0])
+static int values[] = {1, 2 , 4, 5, 7};
+
+static int n_values = sizeof(values)/sizeof(values[0]);
+
+static int new_values[N_VALS];
+
+static int other_values[n_values];
+
+int main(int argc, char *argv[])
+{
+        return 0;
+}
+
+/* COMPILE ERROR
+
+error: variably modified 'other_values' at file scope
+    9 | static int other_values[n_values];
+*/
+
+```
+
+The problem is for `other_values` not `new_values`. `sizeof` is calculated at compile time, but the value of the `n_values` is evaluated at the run time.
+
+So if `a= 5;` then the value of `a` is evaluated at runtime?
+Or the compiler substitutes it everywhere beforehand?
+If it's not removed by the optimization phase of the compiler, yes it is evaluated at the runtime.
+That means we shouldn't take that for granted. We can assume it is evaluated at runtime.
+
+
