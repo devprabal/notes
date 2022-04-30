@@ -110,3 +110,12 @@ dig @root-server-ip www.facebook.com
 
 [root servers ip](https://www.iana.org/domains/root/servers)
 
+
+## cheatsheets
+
+```bash
+curl cheat.sh/<query>
+curl cheat.sh/pacman
+curl cheat.sh/git-status
+```
+
