@@ -10,4 +10,5 @@ List
 - [linux](linux/linux_notes.md)
 - [rpi](rpi/rpi_notes.md)
 - [vim](vim/vim_notes.md)
+- [windows](windows/windows_notes.md)
 

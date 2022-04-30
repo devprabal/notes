@@ -634,5 +634,37 @@ _SUFFIX
 
 *&#47;
 </code></pre>
+
+<h2 id="variably-modified-array-at-file-scope">Variably modified array at file scope</h2>
+
+<pre><code class="language-c">#include &#60;stdio.h&#62;
+#define N_VALS sizeof(values)&#47;sizeof(values[0])
+static int values[] = {1, 2 , 4, 5, 7};
+
+static int n_values = sizeof(values)&#47;sizeof(values[0]);
+
+static int new_values[N_VALS];
+
+static int other_values[n_values];
+
+int main(int argc, char *argv[])
+{
+        return 0;
+}
+
+&#47;* COMPILE ERROR
+
+error: variably modified &#39;other_values&#39; at file scope
+    9 | static int other_values[n_values];
+*&#47;
+
+</code></pre>
+
+<p>The problem is for <code>other_values</code> not <code>new_values</code>. <code>sizeof</code> is calculated at compile time, but the value of the <code>n_values</code> is evaluated at the run time.</p>
+
+<p>So if <code>a= 5;</code> then the value of <code>a</code> is evaluated at runtime?
+Or the compiler substitutes it everywhere beforehand?
+If it&#8217;s not removed by the optimization phase of the compiler, yes it is evaluated at the runtime.
+That means we shouldn&#8217;t take that for granted. We can assume it is evaluated at runtime.</p>
 </body>
 </html>

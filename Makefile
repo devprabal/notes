@@ -3,7 +3,8 @@ DIRS_UNSORTED=	rpi \
 		brave_browser \
 		c \
 		cpp \
-		vim
+		vim \
+		windows
 
 DIRS=$(sort $(DIRS_UNSORTED))
 
@@ -97,3 +98,15 @@ fix_index.html:
 %.css: %.scss
 	@echo -e "$(COLOR_YELLOW)Generating$(COLOR_NONE) stylesheet $(COLOR_BLUE)style.css$(COLOR_NONE)"
 	@./sass $< $@
+
+.PHONY: zip
+zip:
+	@rm -rf output
+	@mkdir -p output
+	@cp index.html style.css output
+	@for dirname in $(DIRS); do \
+		mkdir -p output/$${dirname}; \
+		cp $${dirname}/$${dirname}_notes.html output/$${dirname}; \
+	done
+	@rm -f output.zip
+	@zip -r output.zip output/ --quiet
