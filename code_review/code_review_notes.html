@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="author" content="devpogi" />
+<link rel="stylesheet" href="../style.css" />
+<title>devpogi notes</title>
+</head>
+<body>
+<header>
+	<a href="../index.html">Home</a>
+</header>
+
+<h1 id="code-review">Code Review</h1>
+
+<p><a href="https://www.linkedin.com/learning-login/share?account=42009460&amp;forceAccount=false&amp;redirect=https%3A%2F%2Fwww.linkedin.com%2Flearning%2Fprogramming-foundations-conducting-code-reviews%3Ftrk%3Dshare_ent_url%26shareId%3DGi8uygEJT7GnP%252FTpl%252BcZDQ%253D%253D">Course Link: Programming Foundations: Conducting Code Reviews by Kathryn Hodge</a></p>
+
+<h2 id="what-do-code-reviewers-look-for">What do code reviewers look for?</h2>
+
+<ul>
+<li>Do the code changes made match what was actually to be done? Is the implementation correct?</li>
+<li>Could there be a more efficient way to complete the task?</li>
+<li>Is the code readable and easy to maintain?</li>
+<li>Does the code break any design patterns&#47; architectural conventions that are previously established in the code base?</li>
+</ul>
+
+<h2 id="who-should-code-review">Who should code review?</h2>
+
+<ul>
+<li>Almost everyone from senior to junior developers</li>
+<li>Being a junior developer doesn&#8217;t mean you cannot review the code</li>
+<li>Likewise, a code written by a senior member doesn&#8217;t guarantee its correctness</li>
+</ul>
+
+<h2 id="benefits-of-code-review-from-pov-of-a-junior-developer">Benefits of code review from POV of a junior developer</h2>
+
+<ul>
+<li>Gain understanding of the code base</li>
+<li>Learn how these changes fit in the code base</li>
+<li>Collaboration opportunities</li>
+<li>By being unfamiliar in that area of the code, you provide a unique perspective which may start a discussion with experienced members to uncover other bugs</li>
+</ul>
+
+<h2 id="how-many-people-should-review-a-code">How many people should review a code?</h2>
+
+<ul>
+<li>Depends on team size, but, at least one person (other than the author) should review the code.</li>
+<li>More people reviewing is better. However, many times different reviewers can be conflicting ideologies making it difficult for author to follow.</li>
+<li>Also, having many people to review takes up too much resources from the team for just one PR.</li>
+</ul>
+
+<h2 id="what-code-should-be-reviewed">What code should be reviewed?</h2>
+
+<ul>
+<li>Ideally all code should be reviewed but it depends from team to team</li>
+<li>Some teams could only review intensive&#47;most-important design changes</li>
+<li>Code used only for internal purposes has a lesser urgency than a code which is visible on the client&#8217;s end</li>
+</ul>
+
+<h2 id="how-long-does-it-take-to-review-code">How long does it take to review code?</h2>
+
+<ul>
+<li>Depends on the number of lines changed</li>
+<li>Ideally you shouldn&#8217;t review a code for more than 60 to 90 minutes</li>
+<li>You would have already found out all the defects by 60-90 minutes, however, if you are still uncertain, you can ask other developer to review or meet with the author to discuss changes</li>
+<li>If the number of lines changed are greater than 1000, it is often better to break the submission into multiple commits&#47;PRs for ease of reviewing</li>
+<li>You shouldn&#8217;t rush a code review. Reviewing code takes time and it is important but you should manage your own time too.</li>
+<li>You should spend at least 1-2 hours each day reviewing code</li>
+</ul>
+
+<h2 id="understanding-code-changes-as-a-reviewer">Understanding code changes as a reviewer</h2>
+
+<ul>
+<li>You should understand the overall goal of a code change so that the changes do not cause any side effects and do only what they are supposed to do</li>
+<li>If a new functionality is being added, you should understand what it will do, what it will change and what it will not change</li>
+<li>If a bug is being fixed in the code base, you should understand what the bug is, how to re-produce the bug and how does the change solve the bug</li>
+<li>If the author&#8217;s intent is not clear from their code changes, you should meet&#47;talk with the author to understand their intent</li>
+<li>You should make suggestions to the author when the code changes do not modify the codebase as expected or if a bug&#47;edge-case&#47;or a functionality is left-out uncovered</li>
+<li>You should use your knowledge of the programming language to review and suggest if a better way exists to accomplish the results</li>
+<li>Does the changes follow coding-styles&#47;coding-standards as per the team&#47;project ? - Tabs or spaces? <code>snake_case</code> or <code>camelCase</code>? Variable and function names make sense? etc.<br/></li>
+</ul>
+
+<blockquote>
+<p>Read this <a href="https://github.com/kettanaito/naming-cheatsheet">naming cheatsheet</a> to get insights on how to name your variables for readability and sensibility.  </p>
+</blockquote>
+
+<ul>
+<li>You cannot refactor everything all the time, so you need to decide what to approve&#47;prioritize and what can be let go (maybe refactored later or just left)</li>
+<li>Code shouldn&#8217;t have to be 100% perfect to be approved but it shouldn&#8217;t have severe bugs or issues</li>
+<li>Is the code easy to follow? If other developer has to work on this code, will they be able to follow?</li>
+<li>Has the developer written tests and are the tests testing what they are meant to test?</li>
+</ul>
+
+<h2 id="maintainability-of-code">Maintainability of code</h2>
+
+<ul>
+<li>Does the code changes add new dependencies? Is new dependency required? Does it add more weight&#47;bloat? What if the dependencies are deprecated in the future?</li>
+<li>Does the code change affect a configuration? Configuration changes are usually not tested in automated testing, so we must be cautious if the new configs are really needed.</li>
+<li>Does the change remove backward compatibility? Was it intentional?</li>
+<li>Are there secret-keys&#47;passwords&#47;security vulnerabilities in the code?</li>
+</ul>
+
+<h2 id="how-to-give-feedback-comments">How to give feedback comments?</h2>
+
+<ul>
+<li>You should be polite in your tone and not accuse the author. Maintaining the quality of the code is a team effort, not one person&#8217;s job and we are all bound to make errors.</li>
+</ul>
+
+<blockquote>
+<p><em>By simply prefixing the comment with a label, the intention is clear and the tone dramatically changes.</em>  &#8211; conventionalcomments.org<br/>
+<a href="https://conventionalcomments.org/">conventional: comments</a> <em>is a standard for formatting comments [&#8230;]</em></p>
+
+<p>Following these comment formating practices convey the reviewer&#8217;s intent more clearly and such comments can also be parsed by machine into a standard (example, <code>json</code>) format.</p>
+</blockquote>
+
+<ul>
+<li>Instead of <em>&#8220;You should do this&#8221;</em>, you can write <em>&#8220;Can we do this?&#8221;</em></li>
+<li>Include praise&#47;compliments in your comments too</li>
+<li>If there are no review comments, then the reviewer is not doing their job honestly</li>
+</ul>
+
+<h2 id="checklist-before-creating-a-pr">Checklist before creating a PR</h2>
+
+<ul>
+<li>Let&#8217;s say you created a branch <code>dev</code> from <code>master</code> and commited your code changes into it. Before creating a PR (<code>master</code> &#60;- <code>dev</code>), we must first merge the latest changes from <code>master</code> into <code>dev</code>.</li>
+</ul>
+
+<pre><code class="language-git">git checkout master
+git fetch
+git checkout dev
+git merge master
+</code></pre>
+
+<ul>
+<li><p>This is because it is possible that another PR got merged into <code>master</code> by the time you were implementing the code changes. You should ensure that you are working with the latest changes and when you submit the PR, there should not be any conflicts. However, a conflict can arise when another PR which changed the same file(s) you worked on got merged in <code>master</code> first. You should decide which code blocks to keep and which to remove to resolve the merge conflicts.</p></li>
+<li><p>Pre-review your own code changes so that the other reviewers can spend more time reviewing the design and implementation and less time on suggesting formatting (code style) changes.</p></li>
+</ul>
+
+<blockquote>
+<p>Read about <a href="https://bwiggs.com/notebook/queens-duck/">The Queen&#8217;s Duck</a></p>
+</blockquote>
+
+<ul>
+<li>While pre-reviewing, be sure to delete any extra comments or extra tests&#47;functionalities added which are not required&#47;used.</li>
+</ul>
+
+<h2 id="how-to-act-on-the-review-comments-received">How to act on the review comments received?</h2>
+
+<ul>
+<li><p>It is possible that the code reviewer got frustrated and did not leave gentle comments. In such cases, we should not take those comments as a personal attack on ourselves. We should try to find out what the reviewer is trying to convey and what constructive thing does the reviewer want us to do.</p></li>
+<li><p>It can sometime feel like you have been working forever on a PR because it is being blocked by some reviewer comments. However, patience is the key and you should be willing to learn.</p></li>
+<li><p>You can also ask the reviewer to leave comments in the way you want to receive feedback. For example, you can ask reviewer - <em>&#8220;It&#8217;s easier for me to understand code review comments when they are phrased as questions.&#8221;</em></p></li>
+<li><p>You should respond to <strong>every</strong> review comment even if it is as simple as - <em>Done</em>. </p></li>
+</ul>
+
+<h2 id="miscellaneous-readings">Miscellaneous readings</h2>
+
+<ul>
+<li><a href="https://www.morling.dev/blog/the-code-review-pyramid/">The Code Review Pyramid</a> &#8211; <em>Its intention is to help putting focus on those parts which matter the most during a code review and also which parts could and should be automated &#8211; 
+Gunnar Morling</em></li>
+</ul>
+
+<p><img src="https://www.morling.dev/images/code_review_pyramid.png" alt="Code Review Pyramid" /></p>
+
+<ul>
+<li><a href="https://blog.jez.io/cli-code-review/">Code Review from the Command Line</a> &#8211; a code-review workflow (<em>not reviewing on github web</em>) by Jake Zimmerman</li>
+</ul>
+
+<p><img src="https://blog.jez.io/assets/img/git-heatmap.png" alt="an image taken from Jake Zimmerman's blog on code review from the command line" /></p>
+</body>
+</html>

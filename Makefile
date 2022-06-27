@@ -4,7 +4,8 @@ DIRS_UNSORTED=	rpi \
 		c \
 		cpp \
 		vim \
-		windows
+		windows \
+		code_review
 
 DIRS=$(sort $(DIRS_UNSORTED))
 
