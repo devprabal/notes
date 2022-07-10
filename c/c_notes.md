@@ -690,3 +690,277 @@ If it's not removed by the optimization phase of the compiler, yes it is evaluat
 That means we shouldn't take that for granted. We can assume it is evaluated at runtime.
 
 
+## `static` declaration of a function
+
+A function declaration (prototype or even the definition) can omit the keyword `static` if it comes after another declaration of the same function with `static`.
+If there is one `static` declaration of a function, its first declaration has to be `static`.  
+And a reminder: a function definition serves as a prototype; a prototype serves as a declaration.  
+Normally you will and should have the static in the prototypes too (because they usually come first).  
+
+
+[stackoverflow: does-a-static-function-need-the-static-keyword-for-the-prototype-in-c](https://stackoverflow.com/questions/15670010/does-a-static-function-need-the-static-keyword-for-the-prototype-in-c)
+
+
+## Supported C/C++ versions by `gcc` compiler
+
+```bash
+gcc -v --help 2>/dev/null | grep std=
+```
+
+This will print all the supported C/C++ versions by the compiler. Example output - 
+
+```plaintext
+  -std=c++11                  Conform to the ISO 2011 C++ standard.
+  -std=c++14                  Conform to the ISO 2014 C++ standard.
+revised by the 2003 technical corrigendum.
+  -std=c11                    Conform to the ISO 2011 C standard.
+  -std=c2x                    Conform to the ISO 202X C standard draft (experimental and incomplete support).
+
+```
+
+
+## How to pass a struct member to `sizeof` without using a variable?
+
+Let's say you wanted to use the size of a member of a struct as a buffer size for some other variable/struct but don't want to create an unnecessary variable of the former struct.   
+
+One way is to use a macro for the buffer size of both the struct member and the other variable. Example -   
+
+```c
+#define BUFFER_SIZE 120
+
+typedef struct _mystruct
+{
+    char name[BUFFER_SIZE];
+} mystruct;
+
+char other_name[BUFFER_SIZE] = {0,};
+```
+
+However, if you cannot change the struct definition, then you could use something like -   
+
+```c
+typedef struct _mystruct
+{
+    char name[120];
+} mystruct;
+
+char other_name[sizeof(((mystruct *)0)->name)] = {0,};
+```
+
+`sizeof(((mystruct *)0)->name)` is same as `sizeof(((mystruct *)NULL)->name)`   
+
+Dereferencing doesn't take place inside `sizeof` operator. `sizeof` operator only sees the type of the operand.  
+
+`sizeof` infers the type of `((mystruct *)0)->name`, and returns the size of that type. `((mystruct *)0)` is just a null pointer of the struct `mystruct`. `0->name` is (at compile time) an expression whose type is that of the member `name`.  
+
+The code within the `sizeof` never runs (if it did, the program would segfault!). Only the type of value within the `sizeof` is looked at.   
+
+[stackoverflow: sizeof-single-struct-member-in-c](https://stackoverflow.com/questions/3553296/sizeof-single-struct-member-in-c)  
+
+
+## Warning: function declaration isn't a prototype [-Wstrict-prototypes]
+
+```c
+int myfunc();
+
+warning: function declaration isn't a prototype [-Wstrict-prototypes]
+   11 | int myfunc();
+      | ^~~
+```
+
+A prototype is by definition a function declaration that specifies the type(s) of the function's argument(s).  
+
+A non-prototype function declaration like `int myfunc();` is an old-style declaration that does not specify the number or types of arguments.   
+
+You can call such a function with any arbitrary number of arguments, and the compiler isn't required to complain but if the call is inconsistent with the definition, your program has undefined behavior.  
+
+Logically, empty parentheses would have been a good way to specify that a function takes no arguments, but that syntax was already in use for old-style function declarations, so the ANSI C committee invented a new syntax using the void keyword `int myfunc(void);`  
+
+A function definition (which includes code for what the function actually does) also provides a declaration.   
+
+So if you have something like this -  
+
+```c
+
+int myfunc()
+{
+    return 1;
+}
+```
+
+This provides a non-prototype declaration `int myfunc();` As a definition, this tells the compiler that testlib has no parameters, but as a declaration, it only tells the compiler that testlib takes some unspecified but fixed number and type(s) of arguments.  
+
+If you change `()` to `(void)` the declaration becomes a prototype.  
+
+The advantage of a prototype is that if you accidentally call testlib with one or more arguments, the compiler will diagnose the error.  
+
+[stackoverflow: warning-error-function-declaration-isnt-a-prototype](https://stackoverflow.com/questions/42125/warning-error-function-declaration-isnt-a-prototype?answertab=trending#tab-top)  
+
+
+## Nested array initialization
+
+```c
+#include <stdio.h>
+
+typedef struct _mystruct
+{
+    int s_arr[4];
+    int number;
+} mystruct;
+
+int main(void)
+{
+    int arr[4][3] = {
+        {1, },
+        {2, 1, }, 
+        { [2]=4},
+    };
+
+    for(int i = 0; i<4; i++)
+    {
+        printf("arr[%d] = ", i);
+        for(int j = 0; j<3; j++)
+        {
+            printf("%d ", arr[i][j]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+    mystruct obj[] = {{.s_arr[2] = 3}};
+
+    for(int i = 0; i<4; i++)
+    {
+        printf("obj[0].s_arr[%d] = %d\n", i, obj[0].s_arr[i]);
+    }
+    
+
+    return 0;
+}
+
+/*
+OUTPUT -
+
+arr[0] = 1 0 0 
+arr[1] = 2 1 0 
+arr[2] = 0 0 4 
+arr[3] = 0 0 0 
+
+obj[0].s_arr[0] = 0
+obj[0].s_arr[1] = 0
+obj[0].s_arr[2] = 3
+obj[0].s_arr[3] = 0
+
+*/
+```
+
+[cppreference: array_initialization](https://en.cppreference.com/w/c/language/array_initialization)
+
+
+## The order of init for members of a struct doesn't matter in C
+
+```c
+#include <stdio.h>
+
+typedef struct _mstruct
+{
+    int a[3];
+    int b;
+    char *c;
+} mstruct;
+
+int main(void)
+{
+    mstruct obj = {.b = 4, .a = {1, 2, }, .c = "Hi"};
+    return 0;
+}
+```
+
+This compiles without error. However, the same approach in C++ gives an error - 
+
+```plaintext
+source>: In function 'int main()':
+<source>:12:52: error: designator order for field '_mstruct::a' does not match declaration order in 'mstruct' {aka '_mstruct'}
+   12 |     mstruct obj = {.b = 4, .a = {1, 2, }, .c = "Hi"};
+      |  
+```
+[stackoverflow: non-trivial-designated-initializers-not-supported](https://stackoverflow.com/questions/31215971/non-trivial-designated-initializers-not-supported)
+
+
+## C version used by compiler
+
+```c
+printf("C version = %ld\n", __STDC_VERSION__);
+```
+
+This may output something like -  `C version = 201710`  
+
+However, if you were to use a compiler flag like this - `--std=c11` , you will get output like -  `C version = 201112`  
+
+
+## `snprintf` used with `sizeof` and `strlen`
+
+```c
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+    char n1[4] = {'0', '0', '0', '\0'};
+    char n2[4] = {'0', '0', '0', '\0'};
+
+    snprintf(n1, sizeof(n1), "%s", "aaa"); // 4 bytes (because allocated space is 4) including '\0'
+    snprintf(n2, strlen(n2), "%s", "aaa"); // 3 bytes (because len is 3) including '\0'
+
+    printf("n1 = *****%s*****\n", n1);
+    printf("n2 = *****%s*****\n", n2);
+    return 0;
+}
+
+/*
+OUTPUT -
+
+n1 = *****aaa*****
+n2 = *****aa*****
+
+*/
+```
+
+
+## Initialize a `char` array from a string
+
+```c
+char arr[] = "ABCDE";
+```
+
+
+## A function with `bool` argument accepts a string
+
+```c
+#include <stdio.h>
+#include <stdbool.h>
+
+int get_func(bool value)
+{
+    if(value) return 1;
+    return 0;
+}
+
+int main(void)
+{
+    printf("%d\n", get_func("10")); // string "10" is a char ptr which is implicitly converted to bool to represent true value
+    
+    printf("%d\n", get_func(NULL)); // NULL ptr is implicitly converted to bool to represent false value
+    return 0;
+}
+
+/*
+OUTPUT -
+
+1
+0
+
+*/
+```
+
+[stackoverflow: why-a-function-with-bool-argument-accepts-string](https://stackoverflow.com/questions/41757634/why-a-function-with-bool-argument-accepts-string)
+

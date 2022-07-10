@@ -666,5 +666,257 @@ error: variably modified &#39;other_values&#39; at file scope
 Or the compiler substitutes it everywhere beforehand?
 If it&#8217;s not removed by the optimization phase of the compiler, yes it is evaluated at the runtime.
 That means we shouldn&#8217;t take that for granted. We can assume it is evaluated at runtime.</p>
+
+<h2 id="declaration-of-a-function"><code>static</code> declaration of a function</h2>
+
+<p>A function declaration (prototype or even the definition) can omit the keyword <code>static</code> if it comes after another declaration of the same function with <code>static</code>.
+If there is one <code>static</code> declaration of a function, its first declaration has to be <code>static</code>.<br/>
+And a reminder: a function definition serves as a prototype; a prototype serves as a declaration.<br/>
+Normally you will and should have the static in the prototypes too (because they usually come first).  </p>
+
+<p><a href="https://stackoverflow.com/questions/15670010/does-a-static-function-need-the-static-keyword-for-the-prototype-in-c">stackoverflow: does-a-static-function-need-the-static-keyword-for-the-prototype-in-c</a></p>
+
+<h2 id="supported-cc-versions-by-compiler">Supported C&#47;C++ versions by <code>gcc</code> compiler</h2>
+
+<pre><code class="language-bash">gcc -v --help 2&#62;&#47;dev&#47;null | grep std=
+</code></pre>
+
+<p>This will print all the supported C&#47;C++ versions by the compiler. Example output - </p>
+
+<pre><code class="language-plaintext">  -std=c++11                  Conform to the ISO 2011 C++ standard.
+  -std=c++14                  Conform to the ISO 2014 C++ standard.
+revised by the 2003 technical corrigendum.
+  -std=c11                    Conform to the ISO 2011 C standard.
+  -std=c2x                    Conform to the ISO 202X C standard draft (experimental and incomplete support).
+
+</code></pre>
+
+<h2 id="how-to-pass-a-struct-member-to-without-using-a-variable">How to pass a struct member to <code>sizeof</code> without using a variable?</h2>
+
+<p>Let&#8217;s say you wanted to use the size of a member of a struct as a buffer size for some other variable&#47;struct but don&#8217;t want to create an unnecessary variable of the former struct.   </p>
+
+<p>One way is to use a macro for the buffer size of both the struct member and the other variable. Example -   </p>
+
+<pre><code class="language-c">#define BUFFER_SIZE 120
+
+typedef struct _mystruct
+{
+    char name[BUFFER_SIZE];
+} mystruct;
+
+char other_name[BUFFER_SIZE] = {0,};
+</code></pre>
+
+<p>However, if you cannot change the struct definition, then you could use something like -   </p>
+
+<pre><code class="language-c">typedef struct _mystruct
+{
+    char name[120];
+} mystruct;
+
+char other_name[sizeof(((mystruct *)0)-&#62;name)] = {0,};
+</code></pre>
+
+<p><code>sizeof(((mystruct *)0)-&#62;name)</code> is same as <code>sizeof(((mystruct *)NULL)-&#62;name)</code>   </p>
+
+<p>Dereferencing doesn&#8217;t take place inside <code>sizeof</code> operator. <code>sizeof</code> operator only sees the type of the operand.  </p>
+
+<p><code>sizeof</code> infers the type of <code>((mystruct *)0)-&#62;name</code>, and returns the size of that type. <code>((mystruct *)0)</code> is just a null pointer of the struct <code>mystruct</code>. <code>0-&#62;name</code> is (at compile time) an expression whose type is that of the member <code>name</code>.  </p>
+
+<p>The code within the <code>sizeof</code> never runs (if it did, the program would segfault!). Only the type of value within the <code>sizeof</code> is looked at.   </p>
+
+<p><a href="https://stackoverflow.com/questions/3553296/sizeof-single-struct-member-in-c">stackoverflow: sizeof-single-struct-member-in-c</a>  </p>
+
+<h2 id="warning-function-declaration-isnt-a-prototype--wstrict-prototypes">Warning: function declaration isn&#8217;t a prototype [-Wstrict-prototypes]</h2>
+
+<pre><code class="language-c">int myfunc();
+
+warning: function declaration isn&#39;t a prototype [-Wstrict-prototypes]
+   11 | int myfunc();
+      | ^~~
+</code></pre>
+
+<p>A prototype is by definition a function declaration that specifies the type(s) of the function&#8217;s argument(s).  </p>
+
+<p>A non-prototype function declaration like <code>int myfunc();</code> is an old-style declaration that does not specify the number or types of arguments.   </p>
+
+<p>You can call such a function with any arbitrary number of arguments, and the compiler isn&#8217;t required to complain but if the call is inconsistent with the definition, your program has undefined behavior.  </p>
+
+<p>Logically, empty parentheses would have been a good way to specify that a function takes no arguments, but that syntax was already in use for old-style function declarations, so the ANSI C committee invented a new syntax using the void keyword <code>int myfunc(void);</code>  </p>
+
+<p>A function definition (which includes code for what the function actually does) also provides a declaration.   </p>
+
+<p>So if you have something like this -  </p>
+
+<pre><code class="language-c">
+int myfunc()
+{
+    return 1;
+}
+</code></pre>
+
+<p>This provides a non-prototype declaration <code>int myfunc();</code> As a definition, this tells the compiler that testlib has no parameters, but as a declaration, it only tells the compiler that testlib takes some unspecified but fixed number and type(s) of arguments.  </p>
+
+<p>If you change <code>()</code> to <code>(void)</code> the declaration becomes a prototype.  </p>
+
+<p>The advantage of a prototype is that if you accidentally call testlib with one or more arguments, the compiler will diagnose the error.  </p>
+
+<p><a href="https://stackoverflow.com/questions/42125/warning-error-function-declaration-isnt-a-prototype?answertab=trending#tab-top">stackoverflow: warning-error-function-declaration-isnt-a-prototype</a>  </p>
+
+<h2 id="nested-array-initialization">Nested array initialization</h2>
+
+<pre><code class="language-c">#include &#60;stdio.h&#62;
+
+typedef struct _mystruct
+{
+    int s_arr[4];
+    int number;
+} mystruct;
+
+int main(void)
+{
+    int arr[4][3] = {
+        {1, },
+        {2, 1, }, 
+        { [2]=4},
+    };
+
+    for(int i = 0; i&#60;4; i++)
+    {
+        printf("arr[%d] = ", i);
+        for(int j = 0; j&#60;3; j++)
+        {
+            printf("%d ", arr[i][j]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+    mystruct obj[] = {{.s_arr[2] = 3}};
+
+    for(int i = 0; i&#60;4; i++)
+    {
+        printf("obj[0].s_arr[%d] = %d\n", i, obj[0].s_arr[i]);
+    }
+    
+
+    return 0;
+}
+
+&#47;*
+OUTPUT -
+
+arr[0] = 1 0 0 
+arr[1] = 2 1 0 
+arr[2] = 0 0 4 
+arr[3] = 0 0 0 
+
+obj[0].s_arr[0] = 0
+obj[0].s_arr[1] = 0
+obj[0].s_arr[2] = 3
+obj[0].s_arr[3] = 0
+
+*&#47;
+</code></pre>
+
+<p><a href="https://en.cppreference.com/w/c/language/array_initialization">cppreference: array_initialization</a></p>
+
+<h2 id="the-order-of-init-for-members-of-a-struct-doesnt-matter-in-c">The order of init for members of a struct doesn&#8217;t matter in C</h2>
+
+<pre><code class="language-c">#include &#60;stdio.h&#62;
+
+typedef struct _mstruct
+{
+    int a[3];
+    int b;
+    char *c;
+} mstruct;
+
+int main(void)
+{
+    mstruct obj = {.b = 4, .a = {1, 2, }, .c = "Hi"};
+    return 0;
+}
+</code></pre>
+
+<p>This compiles without error. However, the same approach in C++ gives an error - </p>
+
+<pre><code class="language-plaintext">source&#62;: In function &#39;int main()&#39;:
+&#60;source&#62;:12:52: error: designator order for field &#39;_mstruct::a&#39; does not match declaration order in &#39;mstruct&#39; {aka &#39;_mstruct&#39;}
+   12 |     mstruct obj = {.b = 4, .a = {1, 2, }, .c = "Hi"};
+      |  
+</code></pre>
+
+<p><a href="https://stackoverflow.com/questions/31215971/non-trivial-designated-initializers-not-supported">stackoverflow: non-trivial-designated-initializers-not-supported</a></p>
+
+<h2 id="c-version-used-by-compiler">C version used by compiler</h2>
+
+<pre><code class="language-c">printf("C version = %ld\n", __STDC_VERSION__);
+</code></pre>
+
+<p>This may output something like -  <code>C version = 201710</code>  </p>
+
+<p>However, if you were to use a compiler flag like this - <code>--std=c11</code> , you will get output like -  <code>C version = 201112</code>  </p>
+
+<h2 id="used-with-and-"><code>snprintf</code> used with <code>sizeof</code> and <code>strlen</code></h2>
+
+<pre><code class="language-c">#include &#60;stdio.h&#62;
+#include &#60;string.h&#62;
+
+int main(void)
+{
+    char n1[4] = {&#39;0&#39;, &#39;0&#39;, &#39;0&#39;, &#39;\0&#39;};
+    char n2[4] = {&#39;0&#39;, &#39;0&#39;, &#39;0&#39;, &#39;\0&#39;};
+
+    snprintf(n1, sizeof(n1), "%s", "aaa"); &#47;&#47; 4 bytes (because allocated space is 4) including &#39;\0&#39;
+    snprintf(n2, strlen(n2), "%s", "aaa"); &#47;&#47; 3 bytes (because len is 3) including &#39;\0&#39;
+
+    printf("n1 = *****%s*****\n", n1);
+    printf("n2 = *****%s*****\n", n2);
+    return 0;
+}
+
+&#47;*
+OUTPUT -
+
+n1 = *****aaa*****
+n2 = *****aa*****
+
+*&#47;
+</code></pre>
+
+<h2 id="initialize-a-array-from-a-string">Initialize a <code>char</code> array from a string</h2>
+
+<pre><code class="language-c">char arr[] = "ABCDE";
+</code></pre>
+
+<h2 id="a-function-with-argument-accepts-a-string">A function with <code>bool</code> argument accepts a string</h2>
+
+<pre><code class="language-c">#include &#60;stdio.h&#62;
+#include &#60;stdbool.h&#62;
+
+int get_func(bool value)
+{
+    if(value) return 1;
+    return 0;
+}
+
+int main(void)
+{
+    printf("%d\n", get_func("10")); &#47;&#47; string "10" is a char ptr which is implicitly converted to bool to represent true value
+    
+    printf("%d\n", get_func(NULL)); &#47;&#47; NULL ptr is implicitly converted to bool to represent false value
+    return 0;
+}
+
+&#47;*
+OUTPUT -
+
+1
+0
+
+*&#47;
+</code></pre>
+
+<p><a href="https://stackoverflow.com/questions/41757634/why-a-function-with-bool-argument-accepts-string">stackoverflow: why-a-function-with-bool-argument-accepts-string</a></p>
 </body>
 </html>
