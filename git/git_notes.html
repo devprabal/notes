@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="author" content="devpogi" />
+<link rel="stylesheet" href="../style.css" />
+<title>devpogi notes</title>
+</head>
+<body>
+<header>
+	<a href="../index.html">Home</a>
+</header>
+
+<h1 id="git-notes">Git Notes</h1>
+
+<h2 id="common-commands">Common commands</h2>
+
+<pre><code class="language-git">git help &#60;command&#62;
+git help branch
+
+git config --global core.autocrlf input
+
+git show HEAD
+git show HEAD^
+git show HEAD~
+git show HEAD~3
+git show ed23ab
+
+git ls-tree HEAD
+git ls-tree HEAD^
+git ls-tree HEAD mydir&#47;
+
+git log --author="prabal"
+git log --grep="notes"
+git log small-linklist&#47;src&#47;
+git log 3ed12f..HEAD
+
+git log --oneline --decorate --graph --all
+
+git diff master..other_branch
+git diff other_branch..master
+git diff 63d2344..52acfe2
+git diff
+</code></pre>
+
+<p><code>git log -p</code><br/>
+shows all (diff) what was changed in each of the commits, <code>p</code> (patch)  </p>
+
+<p><code>git log --stat</code><br/>
+show only which files changed in all commits  </p>
+
+<p><code>git log -3 --stat</code><br/>
+shows only which files changed in the previous 3 commits  </p>
+
+<p><code>git show 1efdff small-linklist&#47;src&#47;node.c</code><br/>
+shows what was changed in this file in this commit id  </p>
+
+<p><code>git branch</code><br/>
+list of branches  </p>
+
+<p><code>git branch &#60;new_branch_name&#62;</code><br/>
+creates a new branch from the tip of the current branch, but does not switch to it  </p>
+
+<p><code>git checkout &#60;pre_existing_branch_name&#62;</code><br/>
+switches to that branch  </p>
+
+<p><code>git checkout -b &#60;new_branch_name&#62;</code><br/>
+creates a new branch (from the tip of the current branch) and switches to it.  </p>
+
+<p>The <strong>HEAD</strong> is a pointer pointing to the place (commit) from where new commits will be made.  </p>
+
+<p><code>cat .git&#47;HEAD</code> can be used to show the branch which the HEAD points to now.   </p>
+
+<p><code>ls -la .git&#47;refs&#47;heads</code> can be used to show what all branches the <strong>HEAD</strong> has the reference of.<br/>
+The directory contains a listing of all te branches -   </p>
+
+<pre><code class="language-bash">devp@IdeaPad:&#47;mnt&#47;d&#47;github&#47;small-linklist$ ls -la .git&#47;refs&#47;heads
+
+total 0 
+drwxrwxrwx 1 devp devp 4096 Apr 30 13:35 .
+drwxrwxrwx 1 devp devp 4096 Apr 30 13:35 ..
+-rwxrwxrwx 1 devp devp   41 Apr 30 13:35 main
+</code></pre>
+
+<p>The contents of each of these files is the commit to which the <strong>HEAD</strong> would point when switched to that branch.  </p>
+
+<pre><code class="language-bash">devp@IdeaPad:&#47;mnt&#47;d&#47;github&#47;small-linklist$ cat .git&#47;refs&#47;heads&#47;main
+
+89810c8b078dfa35872a6617bc5a2e22a6ee5deb 
+
+devp@IdeaPad:&#47;mnt&#47;d&#47;github&#47;small-linklist$ git log -1
+
+commit 89810c8b078dfa35872a6617bc5a2e22a6ee5deb (HEAD -&#62; main, origin&#47;main, origin&#47;HEAD)
+Author: devprabal &#60;ghjxvnjd@gmail.com&#62;
+Date:   Fri Apr 29 22:45:37 2022 +0530
+
+    init gcov, lcov support
+</code></pre>
+
+<p>If there are uncommit changes in a branch and we are trying to switch to another branch, then we can switch if the changes are untracked or if the changes do not conflict. Else, we will need to either commit changes, discard the changes (<code>git checkout --</code> those files), or <code>git stash</code> those files.  </p>
+
+<p><code>git branch --merged</code><br/>
+shows that this branch already has the commits of which other branches  </p>
+
+<p><code>git branch --no-merged</code>  </p>
+
+<p><code>git branch -m &#60;new_branch_name&#62;</code><br/>
+changes (or moves) the currently checked-out branch to a new name.<br/>
+CAUTION: may cause extra workarounds when other users are already working on the old name of branch.  </p>
+
+<p><code>git branch -d &#60;branch_to_delete&#62;</code><br/>
+First, checkout to another branch before deleting this branch. This command will complain if the changes are not merged in any other branch (<code>-D</code> to force delete).<br/>
+Returns the HEAD commit-id of the deleted branch.  </p>
+
+<h2 id="configure-ps1">configure PS1</h2>
+
+<pre><code class="language-bash">export PS1=&#39;\w $(tput setaf 3)$(__git_ps1 "(%s)") $(tput sgr0)&#62; &#39;
+</code></pre>
+
+<p><code>__git_ps1</code> is a fuction provided by <code>git-prompt.sh</code> file which can be found at <a href="https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh">github.com&#47;git</a>  </p>
+
+<p><a href="https://github.com/git/git/blob/master/contrib/completion/git-completion.bash">git-completion.bash</a> file can also be installed similarly.  </p>
+
+<h2 id="create-a-branch-using-git-command-line">Create a branch using git command line</h2>
+
+<p>First, you must create your branch locally  </p>
+
+<pre><code class="language-git">git checkout -b your_branch
+</code></pre>
+
+<p>After that, you can work locally in your branch. When you are ready to share the branch, push it. The next command pushes the branch to the remote repository origin and tracks it.  </p>
+
+<pre><code class="language-git">git push -u origin your_branch
+</code></pre>
+
+<p>Teammates can reach your branch by doing:  </p>
+
+<pre><code class="language-git">git fetch
+git chekcout origin&#47;your_branch
+</code></pre>
+
+<p>You can continue working in the branch and pushing whenever you want without passing arguments to git push (argument-less git push will push the local <code>master</code> to remote <code>master</code>, local <code>your_branch</code> to remote <code>your_branch</code>, etc.)  </p>
+
+<p><a href="https://stackoverflow.com/questions/1519006/how-do-i-create-a-remote-git-branch">stackoverflow: how-do-i-create-a-remote-git-branch</a>  </p>
+
+<h2 id="section"><code>bash \r not found</code></h2>
+
+<p>Change git core autocrlf to input and re-clone the repo.  </p>
+
+<p><a href="https://stackoverflow.com/questions/29045140/env-bash-r-no-such-file-or-directory">stackoverflow: env-bash-r-no-such-file-or-directory</a>  </p>
+
+<h2 id="line-endings-crlf-and-lf">Line endings CRLF and LF</h2>
+
+<p>If the project is cloned on linux (LF) server and we open it to edit in VSCode on Windows (CRLF), then we might do -   </p>
+
+<pre><code class="language-git">git config --global core.autocrlf true
+</code></pre>
+
+<p>in both git bash (Windows) and on linux build server.  </p>
+
+<p>If you want to know what file this config is saved in, you can run the command:  <code>git config --global --edit</code>  </p>
+
+<p><a href="https://stackoverflow.com/questions/10418975/how-to-change-line-ending-settings">stackoverflow: how-to-change-line-ending-settings</a>  </p>
+
+<h2 id="checkout-a-github-pr-locally-to-testeditresolve-merge-conflicts">Checkout a github PR locally to test&#47;edit&#47;resolve-merge-conflicts</h2>
+
+<pre><code class="language-git">git fetch origin pull&#47;&#60;PR_ID&#62;&#47;head:&#60;new_branch_name&#62;
+</code></pre>
+
+<p>Then checkout to <code>new_branch_name</code>  </p>
+
+<p><a href="https://stackoverflow.com/questions/27567846/how-can-i-check-out-a-github-pull-request-with-git">stackoverflow: how-can-i-check-out-a-github-pull-request-with-git</a>  </p>
+
+<h2 id="pusing-a-local-branch-to-remote">Pusing a local branch to remote</h2>
+
+<pre><code class="language-git">git push -u origin &#60;new_branch_name&#62;
+</code></pre>
+
+<h2 id="moving-histories-from-one-repo-to-another">Moving histories from one repo to another</h2>
+
+<p>Problem:<br/>
+There is a new repo B and an old repo A. I want to have all commits from A into B preserving the commit history (<code>git log</code> should show me commit history)  </p>
+
+<p>Solution:<br/>
+- Go into B (&#8216;git clone <a href="mailto:git@github.com">git@github.com</a>: devpogi&#47;B.git<code>)  
+-</code>git checkout B<em>new</em>branchname<code>
+- Add remote for repo A (</code>git remote add repAorigin <a href="mailto:git@github.com">git@github.com</a>:devpogi&#47;A.git<code>)  
+-</code>git fetch repoAorigin<code>
+-</code>git merge repoAorigin&#47;master &#8211;allow-unrelated-histories<code>
+- Might introduce a merge conflict  
+- Resolve the conflict and make a commit   
+-</code>git push`  </p>
+
+<p><a href="https://stackoverflow.com/questions/17371150/moving-git-repository-content-to-another-repository-preserving-history">stackoverflow: moving-git-repository-content-to-another-repository-preserving-history</a>  </p>
+
+<p><a href="https://stackoverflow.com/questions/19475387/how-to-handle-fix-git-add-add-conflicts">stackoverflow: how-to-handle-fix-git-add-add-conflicts</a>  </p>
+
+<h2 id="section-1"><code>git patch</code></h2>
+
+<p>If you haven&#8217;t yet committed the changed, then:  </p>
+
+<pre><code class="language-git">git diff &#62; mychanges.patch
+</code></pre>
+
+<p>But it might be possible that there are several untracked (new) files which won&#8217;t be in your git diff output. So, one way to do a patch is to stage everything for a new commit (<code>git add</code> each file, or just <code>git add .</code>) but don&#8217;t do the commit yet, and then run:  </p>
+
+<pre><code class="language-git">git diff --cached &#62; mychanges.patch
+</code></pre>
+
+<p>You can later apply the patch as:  </p>
+
+<pre><code class="language-git">git paply mychanges.patch
+</code></pre>
+
+<p><a href="https://newbedev.com/create-a-git-patch-from-the-uncommitted-changes-in-the-current-working-directory">blogpost: create-a-git-patch-from-the-uncommitted-changes-in-the-current-working-directory</a>  </p>
+
+<h2 id="patch-files">Patch files</h2>
+
+<p>If you need to send the patch file via mail, there is a better built-in way to do this in git using <code>git format-patch</code> command.  </p>
+
+<p>The patch file generated will include subject, author, etc, additional information traditionally used in UNIX-like mail-patching.  </p>
+
+<p>If you need top <code>n</code> commits from a specific commit-sha in the patch file - <code>git format-patch -n commit-sha</code>  </p>
+
+<p>example -<br/>
+<code>git
+git format-patch -1 HEAD
+</code></p>
+
+<p>This will generate a file like <code>0001-commit-message.patch</code>  </p>
+
+<p>To apply this patch, use a series of steps -<br/>
+- <code>git apply --stat 0001-commit-message.patch</code> (<em>shows stats</em>)<br/>
+- <code>git apply --check 0001-commit-message.patch</code> (<em>checks for error before applying</em>)<br/>
+- <code>git am &#60; 0001-commit-message.patch</code> (<em>applies the patch, you will see the commit appear in <code>git log</code></em>)  </p>
+</body>
+</html>

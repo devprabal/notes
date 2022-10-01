@@ -5,7 +5,8 @@ DIRS_UNSORTED=	rpi \
 		cpp \
 		vim \
 		windows \
-		code_review
+		code_review \
+		git
 
 DIRS=$(sort $(DIRS_UNSORTED))
 
