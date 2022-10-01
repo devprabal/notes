@@ -1,16 +1,15 @@
 # Windows Notes
 
 
-## powershell (https://aka.ms/powershell)
+## Powershell (https://aka.ms/powershell)
 
 - [install preview version from releases, example PowerShell-7.2.0-preview.10-win-x64.msi](https://github.com/PowerShell/PowerShell/releases/tag/v7.2.0-preview.10)
 - [docs](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.1)
 
 
-## windows terminal
+## Windows terminal
 
 - can be installed from Microsoft store
-
 
 
 ## wsl
@@ -33,4 +32,23 @@ wsl --install -d <DistroName>
 - [Follow these steps to install msys2, mingw, gcc, vscode C++ extensions](https://code.visualstudio.com/docs/cpp/config-mingw)
 - [steps to install mingw, gcc using msys2](https://www.msys2.org/)
 - Add `mingw` to `PATH` (search from start menu **Edit system enviroment variables** or **Edit system enviroment variables for your account**). The path to bin would be `C:\msys64\mingw64\bin` if installed using msys2 as linked above.
+
+
+## Kill all instance of a program from `cmd`
+
+```cmd
+TASKKILL /F /IM msedge.exe
+TASKKILL /F /IM Code.exe
+```
+
+The first one kills all MS Edge browser instances, the second one does that for Visual Studio Code. The way to identify the name is to find it via Task Manager.
+
+
+## [`winfetch`](https://github.com/kiedtl/winfetch) (a utility similar to `neofetch` on linux)
+
+```cmd
+(Invoke-WebRequest "https://raw.githubusercontent.com/kiedtl/winfetch/master/winfetch.ps1" -UseBasicParsing).Content.Remove(0,1) | Invoke-Expression
+```
+
+![winfetch on windows 11](windows11_fetch.png)
 

@@ -96,44 +96,37 @@ blockquote {
     background-color: #fafafa;
     color: #212121;
   }
-
   nav {
     background-color: #212121;
     color: #fafafa;
   }
-
   button {
     background-color: #212121;
     color: #fafafa;
     border: 1px solid #fafafa;
   }
-
   :not(pre) > code {
     background-color: #212121;
     color: #fafafa;
     border: 1px solid #fafafa;
     border-radius: 4px;
   }
-
   pre {
     background-color: #212121;
     color: #fafafa;
     border: 2px solid #fafafa;
     border-radius: 7px;
   }
-
   a {
     background-color: #212121;
     color: #fafafa;
     text-decoration: underline;
   }
-
   a:hover {
     background-color: #fafafa;
     color: #212121;
     text-decoration: none;
   }
-
   blockquote {
     background-color: #212121;
     color: #fafafa;
