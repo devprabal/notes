@@ -6,3 +6,7 @@
 (from NORMAL mode, type - )  
 `:set number`
 
+
+## Undo an option
+
+`:set spell!`
