@@ -63,5 +63,9 @@ TASKKILL &#47;F &#47;IM Code.exe
 </code></pre>
 
 <p><img src="windows11_fetch.png" alt="winfetch on windows 11" /></p>
+
+<h2 id="internet-not-working-in-">Internet not working in <code>wsl</code></h2>
+
+<p>Possible errors like failure in name resolution for github (<code>git push</code> not working), etc. A workaround for <a href="https://github.com/microsoft/WSL/issues/8390">this known issue</a> is to edit <code>&#47;etc&#47;resolv.conf</code> and set nameserver to <code>8.8.8.8</code>.</p>
 </body>
 </html>

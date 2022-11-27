@@ -52,3 +52,6 @@ The first one kills all MS Edge browser instances, the second one does that for 
 
 ![winfetch on windows 11](windows11_fetch.png)
 
+## Internet not working in `wsl`
+
+Possible errors like failure in name resolution for github (`git push` not working), etc. A workaround for [this known issue](https://github.com/microsoft/WSL/issues/8390) is to edit `/etc/resolv.conf` and set nameserver to `8.8.8.8`.
