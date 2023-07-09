@@ -86,10 +86,16 @@ $ chsh -l
 /bin/fish
 ```
 
+If the shell is not present here, example, `/usr/local/fish`, then you should first add it to this list -  
+
+```bash
+echo /usr/local/bin/fish | sudo tee -a /etc/shells
+```
+
 Example to change to `fish` shell -   
 
 ```bash
-$ chsh -s /bin/fish
+$ chsh -s /usr/local/bin/fish
 
 changing shell for devpogi.
 Password: 
@@ -119,3 +125,18 @@ curl cheat.sh/pacman
 curl cheat.sh/git-status
 ```
 
+## samsung monitor M5 not detected feat. nvidia graphics
+
+- If the nvidia drivers are already installed, a popup for "password for secure boot" shows up during the first install of the drivers.
+- The same popup will occur when switching from `nvidia-470` to say `nvidia-535`.
+- Type a new password, and reboot. 
+- On boot, the first screen will have options like "Continue boot", "MOK", "something MOK", etc...
+- Select "MOK" -> Verify the key (just the details like os name, etc.) -> Enter password -> Reboot.
+
+Now, the monitor should be recognized. This method works as an alternative to "disabling secure boot from bios" method. [stackoverflow, mokutil](https://askubuntu.com/questions/762254/why-do-i-get-required-key-not-available-when-install-3rd-party-kernel-modules/762255#762255)
+
+Also, enable prime profile from nvidia settings -   
+
+```bash
+sudo prime-select nvidia
+```
