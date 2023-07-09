@@ -11,11 +11,8 @@
 <header>
 	<a href="../index.html">Home</a>
 </header>
-
 <h1 id="c-notes">C++ notes</h1>
-
 <h2 id="custom-compare-function-for-custom-objects">Custom compare function for custom objects</h2>
-
 <pre><code class="language-cpp">&#47;&#47; using custom compare function for custom objects in priority_queue
 
 #include &#60;iostream&#62;
@@ -71,14 +68,11 @@ OUTPUT -
 
 *&#47;
 </code></pre>
-
 <h2 id="optimization-reserve-the-size-of-hash-table">Optimization: reserve the size of hash table</h2>
-
 <pre><code class="language-cpp">#define SIZE_OF_HASH_TABLE 20000
 unordered_map&#60;string, int&#62; mymap;
 mymap.reserve(SIZE_OF_HASH_TABLE);
 </code></pre>
-
 <p>This reserves the size of the hash table so that re-hashing doesn&#8217;t occur for at least till <code>SIZE_OF_HASH_TABLE</code> number of elememts. </p>
 </body>
 </html>

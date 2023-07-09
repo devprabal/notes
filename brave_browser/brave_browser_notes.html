@@ -11,59 +11,37 @@
 <header>
 	<a href="../index.html">Home</a>
 </header>
-
 <h1 id="enable-vaapi-settings-for-brave-browser">Enable vaapi settings for brave browser</h1>
-
 <p>Inspect element -&#62; Media
 <img src="vdaVideoDecoder-brave-browser.png" alt="after enabling vaapi settings" /></p>
-
 <p><code>brave:&#47;&#47;gpu</code></p>
-
 <p><img src="brave-gpu.png" alt="brave://gpu" /></p>
-
 <p><code>--use-gl=desktop --enable-features=VaapiVideoDecoder</code></p>
-
 <p>Use these command line arguments when launching brave browser. </p>
-
 <p>Better, replace the <code>.desktop</code> entry for brave browser in <code>&#47;usr&#47;share&#47;applications&#47;</code> with this in the appropriate places (Make sure to remove the trailing <code>%U</code> option in the <code>Exec</code> line which is present by default in the <code>.desktop</code> file).</p>
-
 <pre><code class="language-plaintext">Exec=&#47;usr&#47;bin&#47;brave-browser-stable --use-gl=desktop --enable-features=VaapiVideoDecoder
 </code></pre>
-
 <p>Enable these in <code>brave:&#47;&#47;flags</code>
 <img src="brave-flags.png" alt="brave://flags" /></p>
-
 <p>Install this extension
 <a href="https://github.com/alextrv/enhanced-h264ify">enhanced-h264ify</a></p>
-
 <blockquote>
 <p>This is weird, idk why - (i think this is not required)</p>
-
 <p>On ubuntu - </p>
-
 <p><code>wget https:&#47;&#47;launchpad.net&#47;\~saiarcot895&#47;+archive&#47;ubuntu&#47;chromium-dev&#47;+files&#47;vdpau-va-driver_0.7.4-7ubuntu1\~ppa2\~20.04.1_amd64.deb -O vdpau.deb</code></p>
-
 <p>then </p>
-
 <p><code>sudo dpkg -i vdpau.deb</code></p>
 </blockquote>
-
 <hr/>
-
 <h2 id="extras--">Extras -</h2>
-
 <p>Install these extensions -</p>
-
 <ul>
 <li><a href="https://fastforward.team/">fastforward</a><br/></li>
 <li><a href="https://sponsor.ajay.app/">SponsorBlock</a><br/></li>
 <li><a href="https://github.com/gorhill/uBlock">uBlock</a><br/></li>
 </ul>
-
 <hr/>
-
 <p>Install these also on other browsers - </p>
-
 <ul>
 <li><a href="https://privacybadger.org/">privacy badger</a></li>
 <li><a href="https://clearurls.xyz/">ClearURLs</a></li>

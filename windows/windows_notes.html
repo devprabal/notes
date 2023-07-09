@@ -11,61 +11,42 @@
 <header>
 	<a href="../index.html">Home</a>
 </header>
-
 <h1 id="windows-notes">Windows Notes</h1>
-
 <h2 id="powershell-httpsaka.mspowershell">Powershell (<a href="https://aka.ms/powershell">https:&#47;&#47;aka.ms&#47;powershell</a>)</h2>
-
 <ul>
 <li><a href="https://github.com/PowerShell/PowerShell/releases/tag/v7.2.0-preview.10">install preview version from releases, example PowerShell-7.2.0-preview.10-win-x64.msi</a></li>
 <li><a href="https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.1">docs</a></li>
 </ul>
-
 <h2 id="windows-terminal">Windows terminal</h2>
-
 <ul>
 <li>can be installed from Microsoft store</li>
 </ul>
-
 <h2 id="wsl">wsl</h2>
-
 <pre><code class="language-powershell">wsl --install
 wsl --install -d &#60;DistroName&#62;
 </code></pre>
-
 <h2 id="winget">winget</h2>
-
 <ul>
 <li><a href="https://docs.microsoft.com/en-us/windows/package-manager/winget/">docs and usage</a></li>
 <li>Install AppInstaller Preview (not directly present on Microsoft store) version 1.1.12701 or higher from <a href="https://github.com/microsoft/winget-cli/releases">release page on github</a>. Example, install this <code>Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle</code> from their release.</li>
 <li><a href="https://github.com/microsoft/winget-pkgs">all packages availabe via winget | github repo</a></li>
 </ul>
-
 <h2 id="gcc-on-windows">gcc on windows</h2>
-
 <ul>
 <li><a href="https://code.visualstudio.com/docs/cpp/config-mingw">Follow these steps to install msys2, mingw, gcc, vscode C++ extensions</a></li>
 <li><a href="https://www.msys2.org/">steps to install mingw, gcc using msys2</a></li>
 <li>Add <code>mingw</code> to <code>PATH</code> (search from start menu <strong>Edit system enviroment variables</strong> or <strong>Edit system enviroment variables for your account</strong>). The path to bin would be <code>C:\msys64\mingw64\bin</code> if installed using msys2 as linked above.</li>
 </ul>
-
 <h2 id="kill-all-instance-of-a-program-from-">Kill all instance of a program from <code>cmd</code></h2>
-
 <pre><code class="language-cmd">TASKKILL &#47;F &#47;IM msedge.exe
 TASKKILL &#47;F &#47;IM Code.exe
 </code></pre>
-
 <p>The first one kills all MS Edge browser instances, the second one does that for Visual Studio Code. The way to identify the name is to find it via Task Manager.</p>
-
 <h2 id="a-utility-similar-to-on-linux"><a href="https://github.com/kiedtl/winfetch"><code>winfetch</code></a> (a utility similar to <code>neofetch</code> on linux)</h2>
-
 <pre><code class="language-cmd">(Invoke-WebRequest "https:&#47;&#47;raw.githubusercontent.com&#47;kiedtl&#47;winfetch&#47;master&#47;winfetch.ps1" -UseBasicParsing).Content.Remove(0,1) | Invoke-Expression
 </code></pre>
-
 <p><img src="windows11_fetch.png" alt="winfetch on windows 11" /></p>
-
 <h2 id="internet-not-working-in-">Internet not working in <code>wsl</code></h2>
-
 <p>Possible errors like failure in name resolution for github (<code>git push</code> not working), etc. A workaround for <a href="https://github.com/microsoft/WSL/issues/8390">this known issue</a> is to edit <code>&#47;etc&#47;resolv.conf</code> and set nameserver to <code>8.8.8.8</code>.</p>
 </body>
 </html>

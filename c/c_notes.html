@@ -11,72 +11,45 @@
 <header>
 	<a href="../index.html">Home</a>
 </header>
-
 <h1 id="c-notes">C notes</h1>
-
 <h2 id="what-happens-when-you-have-the-same-function-name-in-two-different-files-and-one-of-them-in-not-">What happens when you have the same function name in two different files and one of them in not <code>static</code> ?</h2>
-
 <p>You might get a linking error saying that there are multiple definitions for that function. You can also see where the function was first defined in the compiler logs.</p>
-
 <h2 id="compile-c-using-visual-studio-compiler-on-windows">Compile C using visual studio compiler on windows</h2>
-
 <p>Open developer command prompt (which gets installed as a part of Visual Studio).</p>
-
 <pre><code class="language-powershell">type&#62; cl
 type&#62; cl main.c
 type&#62; main
 </code></pre>
-
 <p><a href="https://docs.microsoft.com/en-us/cpp/build/walkthrough-compile-a-c-program-on-the-command-line?view=msvc-170">MSVC: walkthrough-compile-a-c-program-on-the-command-line</a></p>
-
 <h2 id="a-better-way-to-write-comparison-statements">A better way to write comparison statements</h2>
-
 <p><code>(NULL == ptr)</code> instead of <code>(ptr == NULL)</code></p>
-
 <p>I remember one exam in which I had spent half an hour to spot this assignment instead of comparison error.  </p>
-
 <p>People might forget to put <code>!</code> (or the extra <code>=</code> for equality, which is more difficult to spot) and do an assignment instead of a comparison.  </p>
-
 <p>Putting the <code>NULL</code> in front eliminates the possiblity for the bug, since <code>NULL</code> is not a l-value (i.e. it can&#8217;t be assigned to).</p>
-
 <h2 id="few-ways-to-implement-a-function-like-">Few ways to implement a function like <code>insertAtBeginningOfLinkedList()</code></h2>
-
 <ul>
 <li>If the head pointer is a global variable (i.e. accessible to all functions), we can just update that global variable and we don&#8217;t need to either pass or return from the function.</li>
 <li>If the head pointer is not a global variable, then we should pass the head pointer in the function and also return the updated head pointer, as -
-
 <ul>
 <li><code>head = insertAtBeginningOfLinkedList(head, data)</code></li>
 </ul></li>
 <li>We can also pass the head pointer by reference and then we don&#8217;t have to return the updated head, as - 
-
 <ul>
 <li> <code>insertAtBeginningOfLinkedList(Node **head, int data)</code></li>
 <li> since head (in <code>main()</code>) is already a pointer to <code>Node</code>, passing by reference can also be like <code>insertAtBeginningOfLinkedList(&#38;head, data)</code></li>
 <li> In order to get the head, we have to dereference it as <code>*head</code>, example, <code>if (*head != NULL) temp-&#62;next = *head;</code></li>
 </ul></li>
 </ul>
-
 <h2 id="initialization-of-">Initialization of <code>struct</code></h2>
-
 <p>If the data is a static or global variable, it is zero-filled by default, so just declare it <code>myStruct _m;</code>.  </p>
-
 <p>If the data is a local variable or a heap-allocated zone, clear it with memset as:  </p>
-
 <p><code>memset(&#38;_m, 0, sizeof(myStruct));</code></p>
-
 <p>Using <code>memset</code> for local structures is better, and it conveys better the fact that at runtime, something has to be done (while usually, global and static data can be understood as initialized at compile time, without any cost at runtime).  </p>
-
 <p><code>= {} ;</code> empty braces for initialization is a GNU extension.  </p>
-
 <p>Note that in C99, a new way of initialization, called designated initialization can be used too:  </p>
-
 <p><code>myStruct _m1 = {.c2 = 0, .c1 = 1};</code>  </p>
-
 <p><a href="https://stackoverflow.com/questions/11152160/initializing-a-struct-to-0">stackoverflow: initializing-a-struct-to-0</a>  </p>
-
 <h2 id="caution-using-to-initialize-you-cant-an-array-correctly-which-is-of-the-type-other-than-1-byte">Caution using <code>memset</code> to initialize: You can&#8217;t <code>memset</code> an array correctly which is of the type other than 1 byte</h2>
-
 <pre><code class="language-c">#include &#60;stdio.h&#62;
 #include &#60;string.h&#62;
 
@@ -134,17 +107,11 @@ OUTPUT -
 
 *&#47;
 </code></pre>
-
 <p><code>memset()</code> will set <strong>each byte</strong> to <code>NONE</code> (2) instead of <strong>every 4 bytes</strong>.  </p>
-
 <p><code>MYENUM</code> will be 4 bytes. So <code>MyList[0][0]</code> will be <code>0x02020202</code> instead of <code>0x00000002</code>.  </p>
-
 <p>We should therefore, use a <code>for</code> loop if we want to set a non-zero value.  </p>
-
 <p><a href="https://stackoverflow.com/questions/21357038/memset-enum-array-values-not-setting-correctly-c-c/21357071#21357071">stackoverflow: memset-enum-array-values-not-setting-correctly-c</a>  </p>
-
 <p>Usually, it gives correct result if setting zero value.  </p>
-
 <pre><code class="language-c">
 #include &#60;stdio.h&#62;
 #include &#60;string.h&#62;
@@ -185,49 +152,28 @@ sizeof bbb 24
 
 *&#47;
 </code></pre>
-
 <h2 id="and-"><code>memset</code>, <code>memcpy</code> and <code>memcmp</code></h2>
-
 <p><code>memcpy()</code> copies from one place to another. <code>memset()</code> just sets all pieces of memory to the same value.  </p>
-
 <p>Example:  </p>
-
 <p><code>memset(str, &#39;*&#39;, 50);</code>  </p>
-
 <p>The above line sets the first 50 characters of the string str to <code>*</code> (or whatever the second argument of the <code>memset</code>).  </p>
-
 <p><code>memcpy(str2, str1, 50);</code>  </p>
-
 <p>The above line copies the first 50 characters of <code>str1</code> to <code>str2</code>.  </p>
-
 <p>It&#8217;s worth pointing out that the <code>mem*()</code> functions do not know about string terminators. The second example above will do bad things if <code>str1</code> is shorter than 50 characters. It&#8217;s only safe to use <code>mem*()</code> functions on string data when you have already validated the lengths involved.  </p>
-
 <p><code>memcmp()</code> (compares two blocks of memory) is in <code>&#60;string.h&#62;</code> in C. Use <code>man memcmp</code> (on terminal) to read description and to find in which header file it is declared.  </p>
-
 <p><a href="https://stackoverflow.com/questions/1536006/what-is-the-difference-between-memset-and-memcpy-in-c">stackoverflow: what-is-the-difference-between-memset-and-memcpy-in-c</a> </p>
-
 <h2 id="freeing-a-pointer">Freeing a <code>NULL</code> pointer</h2>
-
 <p>The <code>free()</code> function cause the space pointed to by pointer <code>ptr</code> to be deallocated, that is, made available for further allocations. If the <code>ptr</code> is a <code>NULL</code> pointer, no action occurs.  </p>
-
 <p><code>ptr = NULL</code> ensures that even if you accidently call <code>free(ptr)</code>, your program won&#8217;t segfault.  </p>
-
 <p>This also means that there is no need to put <code>NULL</code> check before <code>free</code>ing, something like -</p>
-
 <p><code>if (ptr != NULL) free(ptr);</code> </p>
-
 <p>But once the <code>ptr</code> has been freed, it is a good practice to set <code>ptr = NULL</code>. So that you don&#8217;t fall in the risk of double-freeing or dangling pointer access.  </p>
-
 <p>Please note that although the C standard says it is a no-op, that doesn&#8217;t mean that every C library handles it like that. There could be crashes for <code>free(NULL)</code>, so it&#8217;s best to avoid calling the <code>free()</code> on a pointer which has been set to <code>NULL</code>.  </p>
-
 <p><a href="https://stackoverflow.com/questions/1938735/does-freeptr-where-ptr-is-null-corrupt-memory">stackoverflow: does-freeptr-where-ptr-is-null-corrupt-memory</a>  </p>
-
 <h2 id="type-casting-for-freeing">Type casting for freeing</h2>
-
 <pre><code class="language-c">const char *a = (const char *)malloc(3);
 free(a); &#47;&#47; this will be a warning
 </code></pre>
-
 <pre><code class="language-plaintext">warning: passing argument 1 of &#39;free&#39; discards &#39;const&#39; qualifier from pointer target type [-Wdiscarded-qualifiers]
    31 |     free(a); &#47;&#47; this will be a warning
       |          ^
@@ -235,13 +181,9 @@ In file included from &#60;source&#62;:3:
 &#47;usr&#47;include&#47;stdlib.h:565:25: note: expected &#39;void *&#39; but argument is of type &#39;const char *&#39;
   565 | extern void free (void *__ptr) __THROW;
 </code></pre>
-
 <p>Basically a C language problem. The signature of <code>free()</code> should have been <code>void free(const void *);</code>. Fixed in C++ with <code>delete</code>. You need to cast it to a non-const pointer; <code>free</code> takes a <code>void *</code>, not a <code>const void *</code>.  </p>
-
 <p><code>free(char *(a));</code></p>
-
 <h2 id="hex-ascii-and-decimal">Hex, ASCII and decimal</h2>
-
 <pre><code class="language-c">#include &#60;stdio.h&#62;
 #include &#60;string.h&#62;
 
@@ -269,33 +211,22 @@ true
 
 *&#47;
 </code></pre>
-
 <h2 id="clockwise-spiral-rule">Clockwise spiral rule</h2>
-
 <p><code>const char *x</code>, x is a pointer to <code>const char</code>. The pointer can change but the contents of the thing (C-style string) being pointed to can not be changed.  </p>
-
 <p><code>char * const x</code>, x is a pointer to a <code>char</code>. The pointer can not be changed, the contents of the string can be changed. In other words, you can change the actual char, but not the pointer pointing to it.  </p>
-
 <p><code>const char *p</code> is a pointer to a <code>const char</code>.<br/>
 <code>char const *p</code> is a pointer to a <code>char const</code>.  </p>
-
 <p>Since <code>const char</code> and <code>char const</code> are the same, it&#8217;s the same thing.  <code>const</code> will apply to the symbol left of it, if there is none, then, to the symbol right to it.  </p>
-
 <p><a href="http://c-faq.com/decl/spiral.anderson.html">David Anderson: Clockwise&#47;Spiral Rule</a>  </p>
-
 <h2 id="free-the-variable-that-you-are-passing-to-a-function-that-internally-does-">Free the variable that you are passing to a function that internally does <code>strdup</code></h2>
-
 <p><code>strdup()</code> will <code>malloc</code> a memory and reuturn the pointer of that (where it also copies the supplied C-style string). So, it is the responsibility of the caller function to <code>free</code> this memory after use.  </p>
-
 <h2 id="measuring-c-programs-runtime-on-linux">Measuring C programs runtime on linux</h2>
-
 <pre><code class="language-bash">$ time .&#47;a.out
 real    0m0.003s
 user    0m0.000s
 sys     0m0.004s
 $
 </code></pre>
-
 <ul>
 <li>Real, User and Sys process time statistics.</li>
 <li>One of these things is not like the other. Real refers to actual elapsed time. User and Sys refer to CPU time used only by the process.</li>
@@ -304,11 +235,8 @@ $
 <li><strong>Sys</strong> is the amount of CPU time spent in the kernel within the process. This means executing CPU time spent in system calls within the kernel, as opposed to library code, which is still running in user-space. Like &#8216;user&#8217;, this is only CPU time used by the process. </li>
 <li><strong>User+Sys</strong> will tell you how much actual CPU time your process used. Note that this is across all CPUs, so if the process has multiple threads (and this process is running on a computer with more than one processor) it could potentially exceed the wall clock time reported by Real (which usually occurs). Note that in the output these figures include the User and Sys time of all child processes (and their descendants) as well when they could have been collected, e.g., by wait(2) or waitpid(2), although the underlying system calls return the statistics for the process and its children separately.<br/></li>
 </ul>
-
 <p><a href="https://stackoverflow.com/questions/556405/what-do-real-user-and-sys-mean-in-the-output-of-time1">stackoverflow: what-do-real-user-and-sys-mean-in-the-output-of-time</a>  </p>
-
 <h2 id="variadic">Variadic</h2>
-
 <pre><code class="language-c">#include &#60;stdio.h&#62;
 #include &#60;stdarg.h&#62;
 
@@ -345,24 +273,15 @@ Sum of 4, 20, 25 and 30 = 79
 
 *&#47;
 </code></pre>
-
 <p>The C library macro <code>void va_start(va_list ap, last_arg)</code> initializes <code>ap</code> variable to be used with the <code>va_arg</code> and <code>va_end</code> macros. The <code>last_arg</code> is the last known fixed argument being passed to the function i.e. the argument before the ellipsis. This macro must be called before using <code>va_arg</code> and <code>va_end</code>.  </p>
-
 <p>Following is the declaration for <code>va_start()</code> macro.  </p>
-
 <pre><code class="language-c">void va_start(va_list ap, last_arg);
 </code></pre>
-
 <p><code>ap</code> - This is the object of <code>va_list</code> and it will hold the information needed to retrieve the additional arguments with <code>va_arg</code>.  </p>
-
 <h2 id="function-overloading-not-in-c-cannot-set-default-value-for-last-parameter-in-function-def-in-c">Function overloading not in C, cannot set default value for last parameter in function def in C</h2>
-
 <p>C does not allow default value to be set for a parameter(last parameter) in a function. However, there is a trick to achieve the same for on parameter using variadic function. Write a varargs function and manually fill in default values for arguments which the caller doesn&#8217;t pass.  </p>
-
 <p>Also, ther is no function overloading in C (but it is supported in Modern C, see C11).</p>
-
 <h2 id="printing-byte-hex-values">Printing byte (hex) values</h2>
-
 <pre><code class="language-c">#include &#60;stdio.h&#62;
 #include &#60;string.h&#62; &#47;&#47; for memcmp
 
@@ -396,9 +315,7 @@ F0
 
 *&#47;
 </code></pre>
-
 <h2 id="and--1"><code>char []</code> and <code>char *</code></h2>
-
 <pre><code class="language-c">#include &#60;stdio.h&#62;
 
 int main(void)
@@ -425,11 +342,8 @@ sizeof(b)&#47;sizeof(b[0]) = 8
 
 *&#47;
 </code></pre>
-
 <h2 id="checking-memleak-with-">Checking memleak with <code>valgrind</code></h2>
-
 <p>The below program (filename: strdup_memleak.c) is free of mem-leak.</p>
-
 <pre><code class="language-c">#include &#60;stdio.h&#62;
 #include &#60;string.h&#62;
 #include &#60;malloc.h&#62;
@@ -479,9 +393,7 @@ devpogi@Pavilion Downloads]$ gcc strdup_memleak.c
 *&#47;
 
 </code></pre>
-
 <h2 id="libcheck-header-file-and-its-compiled-src-file-on-linux">libcheck header file and its compiled src file on linux</h2>
-
 <pre><code class="language-bash">[devpogi@Pavilion ~]$ sudo pacman -S check
 
 [devpogi@Pavilion ~]$ cd &#47;usr&#47;lib
@@ -498,23 +410,15 @@ check.h
 [devpogi@Pavilion include]$ 
 
 </code></pre>
-
 <p><a href="https://stackoverflow.com/questions/45417496/how-to-determine-if-platform-library-is-static-or-dynamic-from-autotools">stackoverflow: how-to-determine-if-platform-library-is-static-or-dynamic-from-autotools</a>  </p>
-
 <h2 id="only-works-on-integral-values-not-pointers"><code>switch</code> only works on integral values, not pointers</h2>
-
 <pre><code class="language-plaintest">error: switch quantity not an integer
 error: pointers are not permitted as case values
 </code></pre>
-
 <p><code>switch</code> statements operate on integral values only. That&#8217;s why the error message is &#8220;switch quantity not an integer&#8221;. It&#8217;s not a technical limitation so much as it&#8217;s outside the language syntax.  </p>
-
 <p><code>switch</code> is a generalization of a jump table. Jump tables are indexed with integers, not pointers. If your case labels are too spread out the compiler probably converts most or all of them to if&#47;else. There&#8217;s no benefit from using switch&#47;case with non-integral labels instead of if&#47;else.  </p>
-
 <p><a href="https://stackoverflow.com/questions/2308323/why-no-switch-on-pointers">stackoverflow: why-no-switch-on-pointers</a>  </p>
-
 <h2 id="error-dereferencing-pointer-to-incomplete-type">Error: dereferencing pointer to incomplete type</h2>
-
 <pre><code class="language-c">generic_linkedlist_node *hhhead = generic_linkedlist_get_head_node(generic_linkedlist_instance_obj);
 &#47;&#47; --snip--
 if(hhhead)
@@ -533,11 +437,8 @@ if(hhhead)
      *&#47;
 }
 </code></pre>
-
 <p><strong>NOTE: whoever allocates a memory should free it. It is not the responsibility of some other function to free. If one of &#8220;your&#8221; functions allocated it, then same&#47;another of &#8220;your&#8221; functions should deallocate it.</strong>  </p>
-
 <p>Either define the <code>struct</code> (not just <code>typedef</code> it) in the <code>.h</code> file or have some methods in the <code>.c</code> file to return the data members.  </p>
-
 <pre><code class="language-c">static void myfunc(generic_linkedlist_node *node, void *arg)
 {
     cstm_st_type *dddata = (cstm_st_type *)generic_linkedlist_get_data(node);
@@ -564,9 +465,7 @@ if(hhhead)
     &#47;&#47; last argument is the arguments passed to callback func
 }
 </code></pre>
-
 <h2 id="and--2"><code>strcmp()</code> and <code>strncmp()</code></h2>
-
 <pre><code class="language-c">#include &#60;stdio.h&#62;
 #include &#60;string.h&#62;
 
@@ -596,25 +495,15 @@ third arg should be the greater of two str len
 
 *&#47;
 </code></pre>
-
 <p>Therefore, we should compare till <code>max(strlen(a), strlen(b))</code> .</p>
-
 <h2 id="why-can-not-be-used-with-">Why <code>typedef</code> can not be used with <code>static</code> ?</h2>
-
 <p>For example, the code below gives an error -   </p>
-
 <p><code>typedef static int INT2;</code>  </p>
-
 <p>The static <code>keyword</code> is not part of the type, depending on the context it is a storage or scope specifier and has no influence whatsoever on the type. Therefore, it cannot be used as part of the type definition, which is why it is invalid here.  </p>
-
 <p>A <code>typedef</code> is a type definition, i.e. you&#8217;re saying &#8216;this name&#8217; now refers to &#8216;this type&#8217;, the name you give must be an identifier as defined by the language standard, the type has to be a type specifier, i.e. an already named type, either base type or <code>typedef</code>&#8217;ed, a <code>struct</code>, <code>union</code>, or <code>enum</code> specifier, with possible type qualifiers, i.e. <code>const</code>, or <code>volatile</code>.  </p>
-
 <p>The <code>static</code> keyword however does not change the type, it says something about the object, (in general, not in the OOP sense), example, it is a variable that is placed in the static storage, not the type.  </p>
-
 <p><a href="https://stackoverflow.com/questions/2218435/why-typedef-can-not-be-used-with-static">stackoverflow: why-typedef-can-not-be-used-with-static</a>  </p>
-
 <h2 id="empty-string">Empty string</h2>
-
 <pre><code class="language-c">#include &#60;stdio.h&#62;
 #include &#60;string.h&#62;
 
@@ -634,9 +523,7 @@ _SUFFIX
 
 *&#47;
 </code></pre>
-
 <h2 id="variably-modified-array-at-file-scope">Variably modified array at file scope</h2>
-
 <pre><code class="language-c">#include &#60;stdio.h&#62;
 #define N_VALS sizeof(values)&#47;sizeof(values[0])
 static int values[] = {1, 2 , 4, 5, 7};
@@ -659,30 +546,21 @@ error: variably modified &#39;other_values&#39; at file scope
 *&#47;
 
 </code></pre>
-
 <p>The problem is for <code>other_values</code> not <code>new_values</code>. <code>sizeof</code> is calculated at compile time, but the value of the <code>n_values</code> is evaluated at the run time.</p>
-
 <p>So if <code>a= 5;</code> then the value of <code>a</code> is evaluated at runtime?
 Or the compiler substitutes it everywhere beforehand?
 If it&#8217;s not removed by the optimization phase of the compiler, yes it is evaluated at the runtime.
 That means we shouldn&#8217;t take that for granted. We can assume it is evaluated at runtime.</p>
-
 <h2 id="declaration-of-a-function"><code>static</code> declaration of a function</h2>
-
 <p>A function declaration (prototype or even the definition) can omit the keyword <code>static</code> if it comes after another declaration of the same function with <code>static</code>.
 If there is one <code>static</code> declaration of a function, its first declaration has to be <code>static</code>.<br/>
 And a reminder: a function definition serves as a prototype; a prototype serves as a declaration.<br/>
 Normally you will and should have the static in the prototypes too (because they usually come first).  </p>
-
 <p><a href="https://stackoverflow.com/questions/15670010/does-a-static-function-need-the-static-keyword-for-the-prototype-in-c">stackoverflow: does-a-static-function-need-the-static-keyword-for-the-prototype-in-c</a></p>
-
 <h2 id="supported-cc-versions-by-compiler">Supported C&#47;C++ versions by <code>gcc</code> compiler</h2>
-
 <pre><code class="language-bash">gcc -v --help 2&#62;&#47;dev&#47;null | grep std=
 </code></pre>
-
 <p>This will print all the supported C&#47;C++ versions by the compiler. Example output - </p>
-
 <pre><code class="language-plaintext">  -std=c++11                  Conform to the ISO 2011 C++ standard.
   -std=c++14                  Conform to the ISO 2014 C++ standard.
 revised by the 2003 technical corrigendum.
@@ -690,13 +568,9 @@ revised by the 2003 technical corrigendum.
   -std=c2x                    Conform to the ISO 202X C standard draft (experimental and incomplete support).
 
 </code></pre>
-
 <h2 id="how-to-pass-a-struct-member-to-without-using-a-variable">How to pass a struct member to <code>sizeof</code> without using a variable?</h2>
-
 <p>Let&#8217;s say you wanted to use the size of a member of a struct as a buffer size for some other variable&#47;struct but don&#8217;t want to create an unnecessary variable of the former struct.   </p>
-
 <p>One way is to use a macro for the buffer size of both the struct member and the other variable. Example -   </p>
-
 <pre><code class="language-c">#define BUFFER_SIZE 120
 
 typedef struct _mystruct
@@ -706,9 +580,7 @@ typedef struct _mystruct
 
 char other_name[BUFFER_SIZE] = {0,};
 </code></pre>
-
 <p>However, if you cannot change the struct definition, then you could use something like -   </p>
-
 <pre><code class="language-c">typedef struct _mystruct
 {
     char name[120];
@@ -716,55 +588,35 @@ char other_name[BUFFER_SIZE] = {0,};
 
 char other_name[sizeof(((mystruct *)0)-&#62;name)] = {0,};
 </code></pre>
-
 <p><code>sizeof(((mystruct *)0)-&#62;name)</code> is same as <code>sizeof(((mystruct *)NULL)-&#62;name)</code>   </p>
-
 <p>Dereferencing doesn&#8217;t take place inside <code>sizeof</code> operator. <code>sizeof</code> operator only sees the type of the operand.  </p>
-
 <p><code>sizeof</code> infers the type of <code>((mystruct *)0)-&#62;name</code>, and returns the size of that type. <code>((mystruct *)0)</code> is just a null pointer of the struct <code>mystruct</code>. <code>0-&#62;name</code> is (at compile time) an expression whose type is that of the member <code>name</code>.  </p>
-
 <p>The code within the <code>sizeof</code> never runs (if it did, the program would segfault!). Only the type of value within the <code>sizeof</code> is looked at.   </p>
-
 <p><a href="https://stackoverflow.com/questions/3553296/sizeof-single-struct-member-in-c">stackoverflow: sizeof-single-struct-member-in-c</a>  </p>
-
 <h2 id="warning-function-declaration-isnt-a-prototype--wstrict-prototypes">Warning: function declaration isn&#8217;t a prototype [-Wstrict-prototypes]</h2>
-
 <pre><code class="language-c">int myfunc();
 
 warning: function declaration isn&#39;t a prototype [-Wstrict-prototypes]
    11 | int myfunc();
       | ^~~
 </code></pre>
-
 <p>A prototype is by definition a function declaration that specifies the type(s) of the function&#8217;s argument(s).  </p>
-
 <p>A non-prototype function declaration like <code>int myfunc();</code> is an old-style declaration that does not specify the number or types of arguments.   </p>
-
 <p>You can call such a function with any arbitrary number of arguments, and the compiler isn&#8217;t required to complain but if the call is inconsistent with the definition, your program has undefined behavior.  </p>
-
 <p>Logically, empty parentheses would have been a good way to specify that a function takes no arguments, but that syntax was already in use for old-style function declarations, so the ANSI C committee invented a new syntax using the void keyword <code>int myfunc(void);</code>  </p>
-
 <p>A function definition (which includes code for what the function actually does) also provides a declaration.   </p>
-
 <p>So if you have something like this -  </p>
-
 <pre><code class="language-c">
 int myfunc()
 {
     return 1;
 }
 </code></pre>
-
 <p>This provides a non-prototype declaration <code>int myfunc();</code> As a definition, this tells the compiler that testlib has no parameters, but as a declaration, it only tells the compiler that testlib takes some unspecified but fixed number and type(s) of arguments.  </p>
-
 <p>If you change <code>()</code> to <code>(void)</code> the declaration becomes a prototype.  </p>
-
 <p>The advantage of a prototype is that if you accidentally call testlib with one or more arguments, the compiler will diagnose the error.  </p>
-
 <p><a href="https://stackoverflow.com/questions/42125/warning-error-function-declaration-isnt-a-prototype?answertab=trending#tab-top">stackoverflow: warning-error-function-declaration-isnt-a-prototype</a>  </p>
-
 <h2 id="nested-array-initialization">Nested array initialization</h2>
-
 <pre><code class="language-c">#include &#60;stdio.h&#62;
 
 typedef struct _mystruct
@@ -817,11 +669,8 @@ obj[0].s_arr[3] = 0
 
 *&#47;
 </code></pre>
-
 <p><a href="https://en.cppreference.com/w/c/language/array_initialization">cppreference: array_initialization</a></p>
-
 <h2 id="the-order-of-init-for-members-of-a-struct-doesnt-matter-in-c">The order of init for members of a struct doesn&#8217;t matter in C</h2>
-
 <pre><code class="language-c">#include &#60;stdio.h&#62;
 
 typedef struct _mstruct
@@ -837,28 +686,19 @@ int main(void)
     return 0;
 }
 </code></pre>
-
 <p>This compiles without error. However, the same approach in C++ gives an error - </p>
-
 <pre><code class="language-plaintext">source&#62;: In function &#39;int main()&#39;:
 &#60;source&#62;:12:52: error: designator order for field &#39;_mstruct::a&#39; does not match declaration order in &#39;mstruct&#39; {aka &#39;_mstruct&#39;}
    12 |     mstruct obj = {.b = 4, .a = {1, 2, }, .c = "Hi"};
       |  
 </code></pre>
-
 <p><a href="https://stackoverflow.com/questions/31215971/non-trivial-designated-initializers-not-supported">stackoverflow: non-trivial-designated-initializers-not-supported</a></p>
-
 <h2 id="c-version-used-by-compiler">C version used by compiler</h2>
-
 <pre><code class="language-c">printf("C version = %ld\n", __STDC_VERSION__);
 </code></pre>
-
 <p>This may output something like -  <code>C version = 201710</code>  </p>
-
 <p>However, if you were to use a compiler flag like this - <code>--std=c11</code> , you will get output like -  <code>C version = 201112</code>  </p>
-
 <h2 id="used-with-and-"><code>snprintf</code> used with <code>sizeof</code> and <code>strlen</code></h2>
-
 <pre><code class="language-c">#include &#60;stdio.h&#62;
 #include &#60;string.h&#62;
 
@@ -883,14 +723,10 @@ n2 = *****aa*****
 
 *&#47;
 </code></pre>
-
 <h2 id="initialize-a-array-from-a-string">Initialize a <code>char</code> array from a string</h2>
-
 <pre><code class="language-c">char arr[] = "ABCDE";
 </code></pre>
-
 <h2 id="a-function-with-argument-accepts-a-string">A function with <code>bool</code> argument accepts a string</h2>
-
 <pre><code class="language-c">#include &#60;stdio.h&#62;
 #include &#60;stdbool.h&#62;
 
@@ -916,7 +752,6 @@ OUTPUT -
 
 *&#47;
 </code></pre>
-
 <p><a href="https://stackoverflow.com/questions/41757634/why-a-function-with-bool-argument-accepts-string">stackoverflow: why-a-function-with-bool-argument-accepts-string</a></p>
 </body>
 </html>
