@@ -129,9 +129,9 @@ git merge master
 - [The Code Review Pyramid](https://www.morling.dev/blog/the-code-review-pyramid/) -- *Its intention is to help putting focus on those parts which matter the most during a code review and also which parts could and should be automated -- 
 Gunnar Morling*
 
-![Code Review Pyramid](https://www.morling.dev/images/code_review_pyramid.png)
+![Code Review Pyramid](code_review_pyramid.png)
 
 - [Code Review from the Command Line](https://blog.jez.io/cli-code-review/) -- a code-review workflow (*not reviewing on github web*) by Jake Zimmerman
 
-![an image taken from Jake Zimmerman's blog on code review from the command line](https://blog.jez.io/assets/img/git-heatmap.png)
+![an image taken from Jake Zimmerman's blog on code review from the command line](git-heatmap.png)
 
