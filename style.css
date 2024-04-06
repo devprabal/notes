@@ -9,8 +9,8 @@ body {
   font-family: system-ui, sans-serif;
   line-height: 1.7;
   margin: 0 auto;
-  max-width: 720px;
-  padding: 10px;
+  max-width: 1024px;
+  padding: 8px;
   text-align: left;
   word-break: break-word;
   overflow-wrap: break-word;

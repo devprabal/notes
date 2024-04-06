@@ -2,10 +2,12 @@ DIRS_UNSORTED=	rpi \
 		linux \
 		brave_browser \
 		c \
+		clang-format \
 		cpp \
 		vim \
 		windows \
 		code_review \
+		counting-numbers-en-ko-hi \
 		git
 
 DIRS=$(sort $(DIRS_UNSORTED))

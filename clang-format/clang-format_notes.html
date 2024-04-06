@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="author" content="devpogi" />
+<link rel="stylesheet" href="../style.css" />
+<title>devpogi notes</title>
+</head>
+<body>
+<header>
+	<a href="../index.html">Home</a>
+</header>
+<h1 id="notes"><code>clang-format</code> notes</h1>
+<p><a href="https://clang.llvm.org/docs/ClangFormat.html">clang-format</a> is an auto code formatter. I use it for C&#47;C++ projects.</p>
+<h2 id="different-linux-pcs-different-versions">Different linux PCs, different <code>clang-format</code> versions</h2>
+<p>Some options for fomatting specified in <code>.clang-format</code> file don&#8217;t work for versions 10 and below. Most of the linux PCs use Ubuntu which packages this software based on Ubuntu OS version. And even the latest Ubuntu OS version might not include the latest <code>clang-format</code> software version. Thus the options in the format file will be <em>unrecognized</em> when running on a system which has older <code>clang-format</code> software.</p>
+<p><strong>Solution:</strong> docker</p>
+<p>I came across a well maintained, frequently updated, permissive Apache 2.0 licensed docker image <a href="https://hub.docker.com/r/xianpengshen/clang-tools">xianpengshen&#47;clang-tools</a> which has all the latest versions of <code>clang-format</code> (versions 17, 18, etc.).</p>
+<p><strong>Format 1 file -</strong></p>
+<pre><code class="language-bash">docker run --volume $PWD:&#47;src --user $UID xianpengshen&#47;clang-tools:18 clang-format -i list.c
+</code></pre>
+<p>Notes -  </p>
+<ul>
+<li><code>--volume</code> -&#62; lets docker to access your filesystem</li>
+<li><code>$PWD:&#47;src</code> -&#62; I don&#8217;t understand this part</li>
+<li><code>--user $UID</code> -&#62; If you don&#8217;t specify this then the file after the formatting changes will have changed ownership (that of <code>root</code> user). You won&#8217;t be able to make further changes to the file created as <code>root</code> user unless you run <code>sudo chown [...]</code>. This option keeps the current user of the system as the owner of the file.</li>
+<li><code>xianpengshen&#47;clang-tools:18</code> -&#62; use version 18 for clang-format from this docker image. It will pull the image if not found on your system. And since we already use tizenrt docker image to build our code, therefore, I assume that docker is already installed and your USER is in docker group or you have sudo rights.</li>
+<li><code>-i</code> -&#62; change the file inplace instead of outputting on stdout.</li>
+<li>Use version 18 to detect <code>.clang-format-ignore</code> file. I don&#8217;t know why but I couldn&#8217;t achieve it using version 17, although it should be achievable.</li>
+</ul>
+<p><strong>Format all files (<code>.c</code>, <code>.cpp</code> and <code>.h</code>) recursively from current directory -</strong></p>
+<pre><code class="language-bash">find . -name "*.cpp" -o -name "*.c" -o -name "*.h" | xargs -I {} docker run --volume $PWD:&#47;src --user $UID xianpengshen&#47;clang-tools:17 clang-format -i {}
+</code></pre>
+<ul>
+<li>partially taken from <a href="https://learn.adafruit.com/the-well-automated-arduino-library/formatting-with-clang-format">a blog post</a></li>
+<li>partially taken from <a href="https://stackoverflow.com/questions/74195381/how-to-avoid-changing-ownership-of-every-file-in-a-volume-when-starting-a-docker">stackoverflow</a></li>
+</ul>
+<h2 id="local-vs-on-github-via-ci">Local vs on github? (via CI)</h2>
+<p>The above method is local-only usage. You can do it, but you will often forget it. Therefore, we need a bot to do it. However, it should not do it for all the commits because otherwise it will be hectic to <code>git pull</code> everytime after <code>git push</code> on one branch. So, I would like to run it only on PRs.</p>
+<h2 id="github-actions-workflow-bots">github &#8216;Actions&#8217; workflow bots</h2>
+<ul>
+<li><a href="https://github.com/marketplace/actions/clang-format-lint">clang-format-lint</a> -&#62; runs clang-format on files</li>
+<li><a href="https://github.com/marketplace/actions/add-commit">add-commit</a> -&#62; commits the result</li>
+</ul>
+<p><strong>Sample PR on my public github repo</strong> -  </p>
+<p><a href="https://github.com/devprabal/small-linklist/pull/9">https:&#47;&#47;github.com&#47;devprabal&#47;small-linklist&#47;pull&#47;9</a></p>
+<p>In this PR, see the github workflow file, the <code>.clang-format</code> file and <code>.clang-format-ignore</code> file.</p>
+<h2 id="pitfalls">Pitfalls</h2>
+<ul>
+<li><a href="https://stackoverflow.com/questions/578059/studies-on-optimal-code-width">screen width size - 80 vs 120?</a></li>
+<li><a href="https://stackoverflow.com/questions/75802704/clang-format-always-indent-struct-initiallizers">clang-format still doesn&#8217;t have good support for formatting initialization of elements of an array of struct</a>
+one workaround this is to mark that code part for skip-formatting -<br/></li>
+</ul>
+<pre><code class="language-c">&#47;&#47; clang-format off
+my_struct array[] = { {.member1 = something1, .member2 = something2, }, {.member1 = otherthing1, .member2 = otherthing2, },  };
+&#47;&#47; clang-format on
+</code></pre>
+<ul>
+<li><a href="https://github.com/llvm/llvm-project/issues/61533">use trailing comma to get array initialization formatting</a></li>
+</ul>
+<h2 id="unexplored-areas">Unexplored areas</h2>
+<ul>
+<li><a href="https://github.com/audiohacked/git-clang-format">git hooks? (formatting when committing)</a></li>
+<li><a href="https://astyle.sourceforge.net/">Not clang-format? another tool - astyle?</a></li>
+</ul>
+</body>
+</html>
