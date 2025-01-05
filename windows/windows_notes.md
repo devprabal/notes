@@ -19,6 +19,12 @@ wsl --install
 wsl --install -d <DistroName>
 ```
 
+**Starting docker daemon**
+
+```bash
+sudo service docker start
+```
+
 
 ## winget
 
