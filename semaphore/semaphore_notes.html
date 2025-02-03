@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="author" content="devpogi" />
+<link rel="stylesheet" href="../style.css" />
+<title>devpogi notes</title>
+</head>
+<body>
+<header>
+	<a href="../index.html">Home</a>
+</header>
+<h1 id="understanding-semaphore-mutex-and-condition-variable">Understanding semaphore, mutex and condition variable</h1>
+<blockquote>
+<p>in producer consumer scenario</p>
+</blockquote>
+<h2 id="read-the-manual-pages">Read the manual pages</h2>
+<pre><code class="language-txt">SEM_INIT(3)                                   Linux Programmer&#39;s Manual                                   SEM_INIT(3)
+
+NAME
+       sem_init - initialize an unnamed semaphore
+
+SYNOPSIS
+       #include &#60;semaphore.h&#62;
+
+       int sem_init(sem_t *sem, int pshared, unsigned int value);
+
+       Link with -pthread.
+
+DESCRIPTION
+       sem_init()  initializes  the unnamed semaphore at the address pointed to by sem.  The value argument specifies
+       the initial value for the semaphore.
+
+       The pshared argument indicates whether this semaphore is to be shared between the threads of a process, or be‐
+       tween processes.
+
+       If  pshared  has the value 0, then the semaphore is shared between the threads of a process, and should be lo‐
+       cated at some address that is visible to all threads (e.g., a global variable, or a variable allocated dynami‐
+       cally on the heap).
+
+       If  pshared  is  nonzero, then the semaphore is shared between processes, and should be located in a region of
+       shared memory (see shm_open(3), mmap(2), and shmget(2)).  (Since a child created by fork(2) inherits its  par‐
+       ent&#39;s  memory  mappings, it can also access the semaphore.)  Any process that can access the shared memory re‐
+       gion can operate on the semaphore using sem_post(3), sem_wait(3), and so on.
+
+       Initializing a semaphore that has already been initialized results in undefined behavior.
+
+RETURN VALUE
+       sem_init() returns 0 on success; on error, -1 is returned, and errno is set to indicate the error.
+
+ERRORS
+       EINVAL value exceeds SEM_VALUE_MAX.
+</code></pre>
+<h2 id="understand-more-by-chats-with-claude-ai">Understand more by <a href="https://claude.ai/chat/2ca255f1-2caf-45b3-8c02-3b4d3c8b4cfe">chats with Claude AI</a></h2>
+<p>Excerpts </p>
+<ul>
+<li>A semaphore is a synchronization primitive used in concurrent programming to control access to shared resources. Think of it like a pool of permits - threads must acquire a permit before accessing the resource and release it when done.</li>
+</ul>
+<pre><code class="language-python">from threading import Semaphore
+# Create a semaphore with 3 permits
+printer_sem = Semaphore(3)
+</code></pre>
+<ul>
+<li>In this example, the semaphore controls access to printers. Only 3 threads can print simultaneously - if a 4th thread tries to print, it will be blocked until one of the active threads releases its permit.</li>
+<li>They maintain a counter that gets decremented on acquire() and incremented on release()</li>
+<li>If the counter is zero, acquire() blocks until another thread calls release()</li>
+<li>They&#8217;re commonly used for resource pools, producer-consumer scenarios, and limiting concurrency, where you don&#8217;t care which thread accesses the resource, just how many can access it simultaneously.</li>
+</ul>
+<h2 id="binary-mutex-vs-semaphore">Binary mutex vs Semaphore</h2>
+<ul>
+<li>The three acquire() calls will all succeed because there were initially 3 permits available. The fourth call would block (wait indefinitely) because there are no permits left. The thread would only continue when another thread calls release() to return a permit to the semaphore. This is one of the key differences between semaphores and locks&#47;mutexes - <strong>you can acquire a semaphore multiple times (up to its initial value) without releasing in between</strong>, whereas with a lock you can only acquire it once before needing to release it.</li>
+<li>Unlike mutexes which are binary (locked&#47;unlocked), <strong>semaphores can allow multiple threads to access the resource simultaneously.</strong></li>
+</ul>
+<h2 id="re-entrant-mutex-vs-semaphore">Re-entrant mutex vs Semaphore</h2>
+<ul>
+<li><strong>A reentrant mutex (also called a recursive mutex) in C allows the same thread to lock the mutex multiple times</strong> without deadlocking. This is different from a regular mutex, which would deadlock if the same thread tried to lock it twice without an intervening unlock.</li>
+<li>Reentrant mutex: The thread <strong>must release the lock the same number of times</strong> it acquired it</li>
+<li><strong>In case of reentrant mutex, other threads still cannot acquire the lock while it&#8217;s held</strong></li>
+<li>Reentrant mutex: The mutex keeps a count of how many times it&#8217;s been locked</li>
+<li><strong>Reentrant mutex: useful for recursive algorithms</strong> or when functions that lock the mutex might call each other</li>
+<li>Differences b&#47;w reentrant mutex and semaphore</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Basis</th>
+<th>Reentrant mutex</th>
+<th>Semaphore</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Owner tracking</td>
+<td>Reentrant mutex remembers which thread owns it and only allows that same thread to re-acquire it</td>
+<td>Semaphore doesn&#8217;t track ownership - any thread can take available permits</td>
+</tr>
+<tr>
+<td>Release behavior</td>
+<td>Reentrant mutex must be unlocked by the same thread that locked it</td>
+<td>Semaphore&#8217;s release() can be called by any thread, not just the one that called acquire()</td>
+</tr>
+<tr>
+<td>Counter semantics</td>
+<td>Reentrant mutex&#8217;s counter tracks how many times the owning thread has locked it</td>
+<td>Semaphore&#8217;s counter tracks how many total permits are available to any thread</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>There are two main ways to create a semaphore:
+<ul>
+<li>Named Semaphores (sys V style) using <code>sem_open()</code></li>
+<li>Unnamed Semaphores (process-private) using <code>sem_init()</code></li>
+</ul></li>
+<li>The key difference is that <strong>named semaphores persist in the system and can be accessed by different processes using the same name</strong>, while unnamed semaphores exist only in memory and are typically used between threads or related processes that can share memory</li>
+<li>What&#8217;s the initial value in sem<em>init? Does it tell us how many permits are allowed? Yes, **the initial value in sem</em>init specifies exactly how many permits are initially available** in the semaphore. It&#8217;s like pre-loading the semaphore with that many &#8220;tokens&#8221; or &#8220;permits&#8221;.</li>
+</ul>
+<h2 id="condition-variable-vs-semaphore-chats-with-claude-ai">Condition variable vs Semaphore | <a href="https://claude.ai/chat/b25438ff-a2c3-4905-8e25-0720ca6b6926">chats with Claude AI</a></h2>
+<p><strong>Version 1 | my code</strong></p>
+<blockquote>
+<p>My version 1 of reactor pattern code blocks if I send the events in succession without <code>sleep</code> in between. See commit <a href="https://github.com/devprabal/reactor/commit/9fc755b042163a33a006ef893b22c475dace0a82">9fc755b042163a33a006ef893b22c475dace0a82</a></p>
+</blockquote>
+<pre><code class="language-c">bool reactor_send(ReactorEvent event)
+{
+    mtx_lock(&#38;queue_lock);
+    if(q_idx &#62;= 10) {
+        for(int i = 1; i &#60; 10; i++){
+            &#47;&#47;&#47;&#47; drop the earliest event
+            simple_queue[i-1] = simple_queue[i];
+        }
+        q_idx = 9;
+    }
+    simple_queue[q_idx] = event;
+    q_idx++;
+    mtx_unlock(&#38;queue_lock);
+    mtx_unlock(&#38;event_lock);
+    return true;
+}
+
+int task_function(void* arg)
+{
+    while(task_run_status) {
+        DBG;
+        mtx_lock(&#38;event_lock);
+        if(task_run_status == false) {
+            break;
+        }
+        mtx_lock(&#38;queue_lock);
+        if(q_idx &#62; 0) {
+            ReactorEvent event = simple_queue[0];
+            for(int i = 1; i &#60; q_idx; i++){
+                simple_queue[i-1] = simple_queue[i];
+            }
+            q_idx--;
+            DBG;
+            printf("\nPrabal&#39;s debug: event data = %s\n", event.data);
+        }
+        mtx_unlock(&#38;queue_lock);
+    }
+    return 0;
+}
+
+</code></pre>
+<p><strong>Version 2 | by AI</strong></p>
+<ul>
+<li>Improved synchronization using cond variable for efficient event notification</li>
+<li>Removed the problematic event_lock</li>
+<li>Consumer thread now sleeps when queue is empty</li>
+</ul>
+<pre><code class="language-c">bool reactor_send(ReactorEvent event) {
+    mtx_lock(&#38;queue_lock);
+    bool result = enqueue_event(&#38;event_queue, event);
+    cnd_signal(&#38;queue_cond);
+    mtx_unlock(&#38;queue_lock);
+    return result;
+}
+
+int task_function(void* arg) {
+    while (task_run_status) {
+        ReactorEvent event;
+        bool has_event = false;
+        
+        mtx_lock(&#38;queue_lock);
+        while (queue_is_empty(&#38;event_queue) &#38;&#38; task_run_status) {
+            cnd_wait(&#38;queue_cond, &#38;queue_lock);
+        }
+        
+        if (task_run_status) {
+            has_event = dequeue_event(&#38;event_queue, &#38;event);
+        }
+        mtx_unlock(&#38;queue_lock);
+        
+        if (has_event) {
+            printf("\nProcessing event: %s\n", event.data);
+        }
+    }
+    return 0;
+}
+</code></pre>
+<p><strong>Version 3 | by AI</strong></p>
+<ul>
+<li>Can we not use semaphore to signal instead of conditional variable?</li>
+<li>Yes, we can use semaphores instead of condition variables. <strong>Semaphores are particularly well-suited for this producer-consumer scenario</strong>. </li>
+</ul>
+<pre><code class="language-c">bool reactor_send(ReactorEvent event) {
+    mtx_lock(&#38;queue_lock);
+    bool result = enqueue_event(&#38;event_queue, event);
+    mtx_unlock(&#38;queue_lock);
+    
+    &#47;&#47; Signal that new event is available
+    if (result) {
+        sem_post(&#38;queue_sem);
+    }
+    return result;
+}
+
+int task_function(void* arg) {
+    while (task_run_status) {
+        ReactorEvent event;
+        bool has_event = false;
+        
+        &#47;&#47; Wait for event to be available
+        if (sem_wait(&#38;queue_sem) != 0) {
+            &#47;&#47; Handle error
+            continue;
+        }
+        
+        if (!task_run_status) {
+            break;
+        }
+        
+        mtx_lock(&#38;queue_lock);
+        has_event = dequeue_event(&#38;event_queue, &#38;event);
+        mtx_unlock(&#38;queue_lock);
+        
+        if (has_event) {
+            printf("\nProcessing event: %s\n", event.data);
+        }
+    }
+    return 0;
+}
+</code></pre>
+<ul>
+<li>Semaphores naturally fit the producer-consumer pattern</li>
+<li>No need for explicit condition checking in a while loop</li>
+<li><code>sem_wait()</code> automatically blocks until an event is available</li>
+<li><code>sem_post()</code> signals the availability of new events</li>
+<li>Less lock contention since mutex is only held for queue operations</li>
+<li><strong>No spurious wakeups compared to condition variables</strong></li>
+<li>It&#8217;s a counting semaphore, so it keeps track of exactly how many events are available</li>
+</ul>
+</body>
+</html>

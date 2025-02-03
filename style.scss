@@ -7,154 +7,226 @@
 $Black: #212121;
 $White: #fafafa;
 
-$Black300: #E0E0E0;
+$Black300: #e0e0e0;
 $Black800: #424242;
 
 @mixin BgAndTextColorChanger($BgColor: "White") {
-  @if $BgColor == "White" {
-    background-color: $White;
-    color: $Black;
-  } @else if $BgColor == "Black" {
-    background-color: $Black;
-    color: $White;
-  } @else if $BgColor == "InlineCode-Light" {
-    // background-color: $Black300;
-    background-color: $White;
-    color: $Black;
-    border: 1px solid $Black;
-    border-radius: 4px;
-  } @else if $BgColor == "InlineCode-Dark" {
-    // background-color: $Black800;
-    background-color: $Black;
-    color: $White;
-    border: 1px solid $White;
-    border-radius: 4px;
-  }
+	@if $BgColor == "White" {
+		background-color: $White;
+		color: $Black;
+	} @else if $BgColor == "Black" {
+		background-color: $Black;
+		color: $White;
+	} @else if $BgColor == "InlineCode-Light" {
+		// background-color: $Black300;
+		background-color: $White;
+		color: $Black;
+		border: 1px solid $Black;
+		border-radius: 4px;
+	} @else if $BgColor == "InlineCode-Dark" {
+		// background-color: $Black800;
+		background-color: $Black;
+		color: $White;
+		border: 1px solid $White;
+		border-radius: 4px;
+	}
 }
 
 body {
-  @include BgAndTextColorChanger($BgColor: "White");
-  font-family: system-ui, sans-serif;
-  line-height: 1.7;
-  margin: 0 auto;
-  max-width: 1024px;
-  padding: 8px;
-  text-align: left;
-  word-break: break-word;
-  overflow-wrap: break-word;
+	@include BgAndTextColorChanger($BgColor: "White");
+	font-family: system-ui, sans-serif;
+	line-height: 1.7;
+	margin: 0 auto;
+	max-width: 1024px;
+	padding: 8px;
+	text-align: left;
+	word-break: break-word;
+	overflow-wrap: break-word;
 
-  * {
-    max-width: 100%;
-  }
+	* {
+		max-width: 100%;
+	}
 
-  ::selection {
-    @include BgAndTextColorChanger($BgColor: "Black");
-  }
+	::selection {
+		@include BgAndTextColorChanger($BgColor: "Black");
+	}
 
-  transition: background-color 300ms ease-in-out 0s;
+	transition: background-color 300ms ease-in-out 0s;
 }
 
 nav {
-  @include BgAndTextColorChanger($BgColor: "White");
-  text-align: right;
-  font-family: system-ui, sans-serif;
-  font-size: 1.1em;
+	@include BgAndTextColorChanger($BgColor: "White");
+	text-align: right;
+	font-family: system-ui, sans-serif;
+	font-size: 1.1em;
 }
 
 button {
-  @include BgAndTextColorChanger($BgColor: "White");
-  border: 1px solid $Black;
+	@include BgAndTextColorChanger($BgColor: "White");
+	border: 1px solid $Black;
 }
 
 img {
-  max-width: 100%;
+	max-width: 100%;
 }
 
 :not(pre) > code {
-  font-family: monospace;
-  @include BgAndTextColorChanger($BgColor: "InlineCode-Light");
-  font-size: 1.1em;
-  padding: 1px;
-  margin-left: 1px;
-  margin-right: 1px;
+	font-family: monospace;
+	@include BgAndTextColorChanger($BgColor: "InlineCode-Light");
+	font-size: 1.1em;
+	padding: 1px;
+	margin-left: 1px;
+	margin-right: 1px;
 }
 
 pre {
-  font-family: monospace;
-  @include BgAndTextColorChanger($BgColor: "White");
-  font-size: 1.1em;
-  border: 2px solid $Black;
-  border-radius: 7px;
-  padding: 10px;
-  white-space: pre-wrap;
+	font-family: monospace;
+	@include BgAndTextColorChanger($BgColor: "White");
+	font-size: 1.1em;
+	border: 2px solid $Black;
+	border-radius: 7px;
+	padding: 10px;
+	white-space: pre-wrap;
 }
 
 a {
-  @include BgAndTextColorChanger($BgColor: "White");
-  text-decoration: underline;
-  padding: 0 1px;
+	@include BgAndTextColorChanger($BgColor: "White");
+	text-decoration: underline;
+	padding: 0 1px;
 }
 
 a:hover {
-  @include BgAndTextColorChanger($BgColor: "Black");
-  text-decoration: none;
+	@include BgAndTextColorChanger($BgColor: "Black");
+	text-decoration: none;
 }
 
 blockquote {
-  @include BgAndTextColorChanger($BgColor: "White");
-  font-style: italic;
-  font-size: 90%;
-  padding-left: 20px;
-  border-left: 1px solid $Black;
+	@include BgAndTextColorChanger($BgColor: "White");
+	font-style: italic;
+	font-size: 90%;
+	padding-left: 20px;
+	border-left: 1px solid $Black;
+}
+
+//// all table scss code is generate by [claude ai](https://claude.ai/chat/83074cf6-8a84-4c57-9c2a-9df41dcdc38c) and modified by me
+
+$table-border-color: $Black800;
+$table-hover-bg: $Black300;
+$table-header-bg: $Black300;
+$table-spacing: 1rem;
+$table-border-radius: 0.5rem;
+$table-font-size: 0.95rem;
+
+@mixin responsive-table {
+	@media screen and (max-width: 768px) {
+		display: block;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: $table-font-size;
+	@include responsive-table;
+
+	thead {
+		background-color: $table-header-bg;
+
+		th {
+			padding: $table-spacing;
+			font-weight: 600;
+			text-align: left;
+			border-bottom: 2px solid $table-border-color;
+			white-space: nowrap;
+
+			&:first-child {
+				border-top-left-radius: $table-border-radius;
+			}
+
+			&:last-child {
+				border-top-right-radius: $table-border-radius;
+			}
+		}
+	}
+
+	tbody {
+		tr {
+			border-bottom: 1px solid $table-border-color;
+			transition: background-color 0.2s ease;
+
+			&:hover {
+				background-color: $table-hover-bg;
+			}
+
+			&:last-child {
+				border-bottom: none;
+
+				td {
+					&:first-child {
+						border-bottom-left-radius: $table-border-radius;
+					}
+
+					&:last-child {
+						border-bottom-right-radius: $table-border-radius;
+					}
+				}
+			}
+		}
+
+		td {
+			padding: $table-spacing;
+			vertical-align: middle;
+		}
+	}
 }
 
 @mixin ThemeChanger($ThemeMode: "Light") {
-  @if $ThemeMode == "Dark" {
-    body {
-      @include BgAndTextColorChanger($BgColor: "Black");
+	@if $ThemeMode == "Dark" {
+		body {
+			@include BgAndTextColorChanger($BgColor: "Black");
 
-      ::selection {
-        @include BgAndTextColorChanger($BgColor: "White");
-      }
-    }
-    nav {
-      @include BgAndTextColorChanger($BgColor: "Black");
-    }
+			::selection {
+				@include BgAndTextColorChanger($BgColor: "White");
+			}
+		}
+		nav {
+			@include BgAndTextColorChanger($BgColor: "Black");
+		}
 
-    button {
-      @include BgAndTextColorChanger($BgColor: "Black");
-      border: 1px solid $White;
-    }
+		button {
+			@include BgAndTextColorChanger($BgColor: "Black");
+			border: 1px solid $White;
+		}
 
-    :not(pre) > code {
-      @include BgAndTextColorChanger($BgColor: "InlineCode-Dark");
-    }
+		:not(pre) > code {
+			@include BgAndTextColorChanger($BgColor: "InlineCode-Dark");
+		}
 
-    pre {
-      @include BgAndTextColorChanger($BgColor: "Black");
-      border: 2px solid $White;
-      border-radius: 7px;
-    }
+		pre {
+			@include BgAndTextColorChanger($BgColor: "Black");
+			border: 2px solid $White;
+			border-radius: 7px;
+		}
 
-    a {
-      @include BgAndTextColorChanger($BgColor: "Black");
-      text-decoration: underline;
-    }
+		a {
+			@include BgAndTextColorChanger($BgColor: "Black");
+			text-decoration: underline;
+		}
 
-    a:hover {
-      @include BgAndTextColorChanger($BgColor: "White");
-      text-decoration: none;
-    }
+		a:hover {
+			@include BgAndTextColorChanger($BgColor: "White");
+			text-decoration: none;
+		}
 
-    blockquote {
-      @include BgAndTextColorChanger($BgColor: "Black");
-      border-left: 1px solid $White;
-    }
-
-  }
+		blockquote {
+			@include BgAndTextColorChanger($BgColor: "Black");
+			border-left: 1px solid $White;
+		}
+	}
 }
 
-
 @media (prefers-color-scheme: dark) {
-  @include ThemeChanger($ThemeMode: "Dark");
+	@include ThemeChanger($ThemeMode: "Dark");
 }

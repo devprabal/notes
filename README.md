@@ -13,6 +13,7 @@ List
 - [git](git/git_notes.md)
 - [linux](linux/linux_notes.md)
 - [rpi](rpi/rpi_notes.md)
+- [semaphore](semaphore/semaphore_notes.md)
 - [vim](vim/vim_notes.md)
 - [windows](windows/windows_notes.md)
 

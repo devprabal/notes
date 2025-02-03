@@ -87,6 +87,55 @@ blockquote {
   border-left: 1px solid #212121;
 }
 
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+@media screen and (max-width: 768px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+table thead {
+  background-color: #e0e0e0;
+}
+table thead th {
+  padding: 1rem;
+  font-weight: 600;
+  text-align: left;
+  border-bottom: 2px solid #424242;
+  white-space: nowrap;
+}
+table thead th:first-child {
+  border-top-left-radius: 0.5rem;
+}
+table thead th:last-child {
+  border-top-right-radius: 0.5rem;
+}
+table tbody tr {
+  border-bottom: 1px solid #424242;
+  transition: background-color 0.2s ease;
+}
+table tbody tr:hover {
+  background-color: #e0e0e0;
+}
+table tbody tr:last-child {
+  border-bottom: none;
+}
+table tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 0.5rem;
+}
+table tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 0.5rem;
+}
+table tbody td {
+  padding: 1rem;
+  vertical-align: middle;
+}
+
 @media (prefers-color-scheme: dark) {
   body {
     background-color: #212121;

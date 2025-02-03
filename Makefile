@@ -8,7 +8,8 @@ DIRS_UNSORTED=	rpi \
 		windows \
 		code_review \
 		counting-numbers-en-ko-hi \
-		git
+		git \
+		semaphore
 
 DIRS=$(sort $(DIRS_UNSORTED))
 
