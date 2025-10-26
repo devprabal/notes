@@ -9,7 +9,8 @@ DIRS_UNSORTED=	rpi \
 		code_review \
 		counting-numbers-en-ko-hi \
 		git \
-		semaphore
+		semaphore \
+		my_code_repos
 
 DIRS=$(sort $(DIRS_UNSORTED))
 
@@ -79,11 +80,13 @@ README:
 	@echo >> README.md
 	@echo '*My learnings on various subjects.*' >> README.md
 	@echo >> README.md
-	@echo 'List' >> README.md
+	@echo '## List' >> README.md
 	@echo >> README.md
 	@for dirname in $(DIRS); do \
 		echo "- [$${dirname}]($${dirname}/$${dirname}_notes.md)" >> README.md ; \
 	done
+	@echo >> README.md
+	@cat .how_to_build.md >> README.md
 	@echo >> README.md
 
 index.html: README.md style.css

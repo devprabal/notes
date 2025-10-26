@@ -2,3 +2,4 @@
 output
 .sass-cache/
 style.css.map
+build.sh
