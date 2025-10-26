@@ -53,11 +53,11 @@ docker run --rm -i -v "$PWD":&#47;app notes-builder make
 <h2 id="how-to-add-new-docs">How to add new docs?</h2>
 
 <p>Suppose you want to add a new notes dir (say) - <code>kawaii_tech</code>.<br/>
-Then this dir (<code>kawaii_tech</code>) should have the following structure and mandatory files (notice the naming of the files too) -  </p>
+Then this dir <code>kawaii_tech</code> should have the following structure and mandatory files (notice the naming of the files too) -  </p>
 
-<pre><code>`kawaii_tech&#47;kawaii_tech_notes.html` (your notes in Markdown format)  
-</code></pre>
+<p><code>kawaii_tech&#47;kawaii_tech_notes.html</code></p>
 
-<p>Now in the <code>Makefile</code> (of the project&#8217;s root dir) add this dir to <code>DIRS_UNSORTED</code> variable</p>
+<p><code>kawaii_tech_notes.html</code> is the file in which your markdown content goes.<br/>
+Now in the <code>Makefile</code> (of the project&#8217;s root dir) add this dir to <code>DIRS_UNSORTED</code> variable.  </p>
 </body>
 </html>
