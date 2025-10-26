@@ -23,8 +23,11 @@
 <header>
     <a href="./index.html">Home</a>
 </header><h1 id="devpogi-notes">devpogi notes</h1>
+
 <p><em>My learnings on various subjects.</em></p>
-<p>List</p>
+
+<h2 id="list">List</h2>
+
 <ul>
 <li><a href="brave_browser/brave_browser_notes.html">brave_browser</a></li>
 <li><a href="c/c_notes.html">c</a></li>
@@ -34,10 +37,27 @@
 <li><a href="cpp/cpp_notes.html">cpp</a></li>
 <li><a href="git/git_notes.html">git</a></li>
 <li><a href="linux/linux_notes.html">linux</a></li>
+<li><a href="my_code_repos/my_code_repos_notes.html">my<em>code</em>repos</a></li>
 <li><a href="rpi/rpi_notes.html">rpi</a></li>
 <li><a href="semaphore/semaphore_notes.html">semaphore</a></li>
 <li><a href="vim/vim_notes.html">vim</a></li>
 <li><a href="windows/windows_notes.html">windows</a></li>
 </ul>
+
+<h2 id="how-to-build-this-repo">How to build this repo?</h2>
+
+<pre><code class="language-bash">docker build -t notes-builder .
+docker run --rm -i -v "$PWD":&#47;app notes-builder make
+</code></pre>
+
+<h2 id="how-to-add-new-docs">How to add new docs?</h2>
+
+<p>Suppose you want to add a new notes dir (say) - <code>kawaii_tech</code>.<br/>
+Then this dir (<code>kawaii_tech</code>) should have the following structure and mandatory files (notice the naming of the files too) -  </p>
+
+<pre><code>`kawaii_tech&#47;kawaii_tech_notes.html` (your notes in Markdown format)  
+</code></pre>
+
+<p>Now in the <code>Makefile</code> (of the project&#8217;s root dir) add this dir to <code>DIRS_UNSORTED</code> variable</p>
 </body>
 </html>
