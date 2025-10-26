@@ -12,7 +12,7 @@
 - [cpp](cpp/cpp_notes.md)
 - [git](git/git_notes.md)
 - [linux](linux/linux_notes.md)
-- [my_code_repos](my_code_repos/my_code_repos_notes.md)
+- [my_repos](my_repos/my_repos_notes.md)
 - [rpi](rpi/rpi_notes.md)
 - [semaphore](semaphore/semaphore_notes.md)
 - [vim](vim/vim_notes.md)

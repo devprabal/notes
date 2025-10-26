@@ -10,7 +10,7 @@ DIRS_UNSORTED=	rpi \
 		counting-numbers-en-ko-hi \
 		git \
 		semaphore \
-		my_code_repos
+		my_repos
 
 DIRS=$(sort $(DIRS_UNSORTED))
 
