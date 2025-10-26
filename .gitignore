@@ -1,2 +1,4 @@
 .vscode
 output
+.sass-cache/
+style.css.map

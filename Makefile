@@ -18,7 +18,6 @@ DIRS=$(sort $(DIRS_UNSORTED))
 
 include constants.mk
 
-LOWDOWN_PATH=./lowdown
 CSS_PATH=style.css
 OBJS= build.sh README.md style.css style.css.map index.html
 
@@ -29,7 +28,7 @@ build:
 	@$(MAKE) clean 
 	@$(MAKE) script_wrapper 
 	@$(MAKE) README 
-	@$(MAKE) index.html 
+	@$(MAKE) index.html
 	@$(MAKE) fix_index.html
 	@echo "$(COLOR_GREEN)DONE$(COLOR_NONE)"
 
@@ -88,7 +87,7 @@ README:
 	@echo >> README.md
 
 index.html: README.md style.css
-	@$(LOWDOWN_PATH) $< -o $@.temp -thtml
+	lowdown $< -o $@.temp -thtml
 	@cat html_envelope > index.html
 	@cat $@.temp >> index.html
 	@echo '</body>' >> index.html
@@ -102,7 +101,7 @@ fix_index.html:
 
 %.css: %.scss
 	@echo "$(COLOR_YELLOW)Generating$(COLOR_NONE) stylesheet $(COLOR_BLUE)style.css$(COLOR_NONE)"
-	@./sass $< $@
+	@sass $< $@
 
 .PHONY: zip
 zip:
