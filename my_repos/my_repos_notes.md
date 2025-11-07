@@ -1,5 +1,10 @@
 # A story of my code repos
 
+> TL;DR  
+> Jump to [the list](#list) of all the repos mentioned in the story, in their order of appearance.  
+
+---
+
 I really like to program in C more than in C++ (however, I am trying to learn cpp better too). Sometimes, I have this immense urge to code something. In 2021, I was heavily inspired by the linked list library written by Taehwan Hwang in Samsung. So, I tried to create a very very minimal version of that in my repo  **[small-linklist](https://github.com/devprabal/small-linklist)** .
 Since then, time and now, this *local-maxima-urge* of coding keeps coming back to me, creating something like -  **[csv](https://github.com/devprabal/csv)**, which is user-config based serialization of C-structs to csv. There's also  **[reactor](https://github.com/devprabal/reactor)** which is a very minimal implementation of reactor pattern in C (because I read about this pattern that week hahaha!).
 
@@ -17,3 +22,37 @@ During my initial job days, I was focused on C and understanding my company's co
 I love markdown and you will always find me taking notes or documentations of stuffs that I find useful (and forget-full) and of materials on which I have spent time studying or collecting. My  **[notes](https://github.com/devprabal/notes)** website is a simplistic reminder of how great markdown can be to take notes distraction free and to convert them easily using lowdown into a beautiful and minimalist SSG. Other times, I like to go fancy and write down some of my own thoughts about the great things that I read on the internet in my  **[readings](https://github.com/devprabal/readings)** repo which uses mkdocs.
 
 I have so many goals, and I realized it in 2022 that most of these are NOT a weekend getaway (*When did our goals turn into years?*).  I started learning  **[korean](https://github.com/devprabal/korean)** in about 2023, and yet, I am stuck on level 1 (well, mainly due to my procrastination XD). Recently, I have started collecting  **[suggestions that I receive from some of my good peeps](https://github.com/devprabal/people)** (request me for a link) like I used to collect pokémon  cards in my childhood (never let the child in you die!).
+
+---
+
+## list
+
+```bash
+cat my_repos_notes.md | perl -nle 'print "- $1" while /\*\*(.*?)\*\*/g'
+```
+
+- [small-linklist](https://github.com/devprabal/small-linklist)
+- [csv](https://github.com/devprabal/csv)
+- [reactor](https://github.com/devprabal/reactor)
+- [dotfiles-voidlinux](https://github.com/devprabal/dotfiles-voidlinux)
+- [dotfiles-manjaro](https://github.com/devprabal/dotfiles-manjaro)
+- [dotfiles-ubuntu](https://github.com/devprabal/dotfiles-ubuntu)
+- [mac_setup](https://github.com/devprabal/mac_setup)
+- [BMI-prediction-of-health-status](https://github.com/devprabal/BMI-prediction-of-health-status)
+- [indian-liver-patients-prediction](https://github.com/devprabal/indian-liver-patients-prediction)
+- [learn some js](https://github.com/devprabal/happybday)
+- [learnt a bit of p5.js](https://github.com/devprabal/starry)
+- [gnome-shell colorscheme](https://github.com/devprabal/Adwaita-bananafish)
+- [socket programming](https://github.com/devprabal/socket-programming)
+- [synkrino ecomm web scrapper](https://github.com/devprabal/synkrino)
+- [NITRR-result-crawler | college result website scrapper](https://github.com/devprabal/NITRR_result_crawler)
+- [reddit-saved](https://github.com/devprabal/reddit-saved)
+- [30 day linux upskill challenge](https://github.com/devprabal/linuxupskillchallenge)
+- [learnt bash scripting](https://github.com/devprabal/bash-scripts)
+- [tracks with material-for-mkdocs](https://github.com/devprabal/tracks)
+- [24k_tracks with calendar-js framework](https://github.com/devprabal/24k_tracks)
+- [see door](https://github.com/devprabal/door)
+- [notes](https://github.com/devprabal/notes)
+- [readings](https://github.com/devprabal/readings)
+- [korean](https://github.com/devprabal/korean)
+- [suggestions that I receive from some of my good peeps](https://github.com/devprabal/people)
